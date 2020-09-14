@@ -1,0 +1,71 @@
+<?php
+//GET TOTAL PACKAGE COUNT
+$pkResult = $this->GetApplicationPackageCount();
+$pkCount = count($pkResult);
+//GET MIN MAX PACKAGE PRICE RANGE
+$minPkPrice = 0;
+$maxPkPrice = 0;
+$minMaxPkPriceResult = $this->getMinMaxAppPkPrice();
+if($minMaxPkPriceResult){
+    $minPkPrice = $minMaxPkPriceResult->minPkPrice;
+    $maxPkPrice = $minMaxPkPriceResult->maxPkPrice;
+}
+//GET OVERALL REVIEW COUNT
+$ovRevPkCount = 0;
+$overallPkReviewCount = $this->GetOverallReviewCount();
+$ovRevPkCount = count($overallPkReviewCount);
+?>
+<h4 class="search-results-title pkSearch"><i class="soap-icon-search"></i> Search Packages</h4>
+<input type="hidden" name="totPk" id="totPk" value="<?php echo $pkCount; ?>"/>
+<div class="toggle-container filters-container">
+    <div class="panel style1 arrow-right">
+        <h4 class="panel-title">
+            <a class="collapsed" href="#price-filter" data-toggle="collapse">Price</a>
+        </h4>
+        <div id="price-filter" class="panel-collapse collapse">
+            <div class="panel-content">
+                <div id="price-range" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" aria-disabled="false">
+                    <a class="ui-slider-handle ui-state-default ui-corner-all" href="#" style="left:0%;"></a>
+                    <a class="ui-slider-handle ui-state-default ui-corner-all" href="#" style="left:100%;"></a>
+                </div>
+                <br>
+                <span class="min-price-label pull-left"><i class="fa fa-inr"></i> <?php echo $minPkPrice; ?></span>
+                <span class="max-price-label pull-right"><i class="fa fa-inr"></i> <?php echo $maxPkPrice; ?></span>
+                <div class="clearer"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="panel style1 arrow-right">
+        <h4 class="panel-title">
+            <a class="collapsed" href="#rating-filter" data-toggle="collapse">User Rating</a>
+        </h4>
+        <div id="rating-filter" class="panel-collapse collapse">
+            <div class="panel-content">
+                <div id="rating" class="five-stars-container editable-rating ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" aria-disabled="false">
+                    <a class="ui-slider-handle ui-state-default ui-corner-all" href="#" style="left:0%;"></a>
+                </div>
+                <br>
+                <small><?php echo $ovRevPkCount; ?> REVIEW<?php if($ovRevPkCount > 1){ ?>S<?php } ?></small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="panel style1 arrow-right">
+        <h4 class="panel-title">
+            <a class="collapsed" href="#modify-search-panel" data-toggle="collapse">Modify Search</a>
+        </h4>
+        <div id="modify-search-panel" class="panel-collapse collapse">
+            <div class="panel-content">
+                <form name="mdfySearchPackage" id="mdfySearchPackage" action="<?php echo $this->Url('package'); ?>" method="GET">
+                    <div class="form-group">
+                        <label>Destination</label>
+                        <input type="text" class="input-text full-width isRequired" name="searchHomeDestination" id="searchHomeDestination" placeholder="Enter a destination" title="Please enter a destination to continue"/>
+                    </div>
+                    <br>
+                    <button type="button" class="btn-medium icon-check uppercase full-width" onclick="getMdfySearchPackageList();return false;">Search again</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,31 @@
+<?php
+/**
+ * This makes our life easier when dealing with paths. Everything is relative
+ * to the application root now.
+ */
+chdir(dirname(__DIR__));
+
+defined('CONFIG_PATH') || define('CONFIG_PATH', realpath(__DIR__."/../config"));
+
+// Decline static file requests back to the PHP built-in webserver
+if (php_sapi_name() === 'cli-server' && is_file(__DIR__ . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH))) {
+    return false;
+}
+
+defined('APPLICATION_PATH')
+    || define('APPLICATION_PATH', realpath(dirname(__FILE__)));
+
+
+defined('UPLOAD_PATH')
+    || define('UPLOAD_PATH', realpath(dirname(__FILE__) . '/uploads'));
+    
+defined('TEMP_UPLOAD_PATH')
+    || define('TEMP_UPLOAD_PATH', realpath(dirname(__FILE__) . '/temporary'));
+    
+// Setup autoloading
+require 'init_autoloader.php';
+// Define path to guzzle directory
+require 'guzzle/autoload.php';
+
+// Run the application!
+Zend\Mvc\Application::init(require 'config/application.config.php')->run();

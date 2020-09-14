@@ -1,0 +1,71 @@
+<?php
+if (isset($result) && trim($result) != "") {
+    ?>
+    <script type="text/javascript">
+        window.parent.location.reload();
+        window.parent.closeModal();
+    </script>
+    <?php
+}
+?>
+<link rel="stylesheet"  type="text/css" href="<?php echo $this->basePath().'/assets/css/AdminLTE.css';?>"/>
+<link rel="stylesheet"  type="text/css" href="<?php echo $this->basePath().'/assets/css/bootstrap.min.css';?>"/>
+<style type="text/css">
+    html,body{
+        background:#fff !important;
+    }
+</style>
+<!-- Content Header (Page header) -->
+<section class="content-header" style="padding-left:18px;">
+    <h4>Package Enquiry</h4>
+</section>
+<?php if(count($cusEnquiryResult) > 0) {
+    if(count($cusEnquiryResult) > 1) {
+        $title = 'Previous Enquiries';
+    }else{
+        $title = 'Previous Enquiry';
+    }
+   ?>
+<div style="float:left;width:100%;height:auto;padding-left:18px;">
+    <div style="float:left;width:100%;font-size:14px;font-weight:bold;padding-bottom:5px;"><?php echo $title; ?></div>
+    <?php foreach($cusEnquiryResult as $enquiry) { ?>
+       <div style="float:left;width:95%;font-size:13px;background:#f4f4f4;margin-top:3px;padding-right:14px;"><?php echo ucfirst($enquiry['request']); ?></div>
+    <?php } ?>
+</div>
+<?php } ?>
+<!-- Main content -->
+<section class="content" style="background:#fff !important;">
+            <div class="box-header">
+                <div class="pull-right" style="font-size:15px;"><span class="mandatory">*</span> indicates required field &nbsp;</div> 
+            </div><!-- /.box-header -->
+            <!-- form start -->
+            <form class="form-horizontal" name="packageEnquiry" id="packageEnquiry"  method="post" action="<?php echo $this->url('package-enquiry'); ?>" autocomplete="off">
+                <div class="box-body">
+                    <div class="form-group">
+                        <label for="enquiryText" class="col-lg-2 control-label">Enquiry<span class="mandatory">*</span></label>
+                        <div class="col-lg-4">
+                            <input type="hidden" name="packageAgentMapId" id="packageAgentMapId" value="<?php echo base64_encode($packageAgentMapId); ?>"/>
+                            <textarea class="form-control isRequired" name="enquiryText" id="enquiryText" placeholder="Type Enquiry" title="Please type your enquiry" style="width:420px;max-width:420px;height:106px !important;max-height:106px;"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="box-footer">
+                        <input type="button" class="btn btn-primary btn-xs" value="Submit" onclick="validateNow();return false;">
+                    </div>
+                </div>
+         </form>
+</section><!-- /.content -->
+<script type="text/javascript">
+    duplicateName = true;
+    function validateNow() {
+        flag = deforayValidator.init({
+            formId: 'packageEnquiry'
+        });
+        if (flag) {
+            if (duplicateName) {
+                $.blockUI();
+                document.getElementById('packageEnquiry').submit();
+            }
+        }
+    }
+</script>

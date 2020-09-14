@@ -1,0 +1,50 @@
+<?php
+use Zend\Session\Container;
+$container = new Container('customer');
+?>
+<form name="loginForm" id="loginForm" method="post" action="<?php echo $this->url('login');?>">
+<h3>Customer Login</h3>
+<table  cellspacing="3" cellpadding="7" style="text-align:center;width:50%;">
+  <tr>
+    <input type="hidden" name="fromPkView" id="fromPkView" value="<?php echo base64_encode($pkId); ?>"/>
+    <input type="hidden" name="fromPkReview" id="fromPkReview" value="<?php echo base64_encode($pkAgtMapId); ?>"/>
+    <input type="hidden" name="fromPkbk" id="fromPkbk" value="<?php echo base64_encode($pkBookId); ?>"/>
+    <td style="font-family:Calibri;font-size:14px;text-align:right;padding-right:5%;">Login Id</td>
+    <td style="text-align:left;">:</td> 
+    <td style="text-align:left;padding-left:5%;"><input type="text" class="isRequired" name="login" id="login" placeholder="Enter login id" title="Please enter the login id to continue" style="width:320px;font-family:Calibri;font-size:12px;"/></td>
+  </tr>
+  <tr>
+    <td style="font-family:Calibri;font-size:14px;text-align:right;padding-right:5%;">Password</td>
+    <td style="text-align:left;">:</td> 
+    <td style="text-align:left;padding-left:5%;"><input type="password" class="isRequired" name="password" id="password" placeholder="Enter password" title="Please enter your password" style="width:320px;font-family:Calibri;font-size:12px;"/></td>
+  </tr>
+  <tr>
+    <td colspan="3" style="text-align:center;"><input type="submit" name="signin" id="signin" value="Signin" onclick=" return validateNow();" style="font-family:Calibri;color:#fff;background-color:#3498db;border:1px solid #2980b9;"/>&nbsp&nbsp&nbsp&nbsp<a href="<?php echo $this->url('forgot-password');?>"><input type="button" name="forgotPassword" id="forgotPassword" value="Forgot Password" style="font-family:Calibri;color:#000;background-color:#fff;border:1px solid #fff;"/></a></td>
+  </tr>
+</table>
+</form>
+<script type="text/javascript">
+    $(document).ready(function() {
+        <?php
+        if (isset($container->alertMsg) && $container->alertMsg != "") {
+            ?>
+                alert("<?php echo $container->alertMsg; ?>");
+            <?php
+            $container->alertMsg = "";
+            unset($container->alertMsg);
+        }
+        ?>
+     });
+    
+    function validateNow(){
+        flag = deforayValidator.init({
+            formId: 'loginForm'
+        });
+        
+        if(flag){
+                document.getElementById('loginForm').submit();
+        }else{
+            return false;
+        }
+    }
+</script>

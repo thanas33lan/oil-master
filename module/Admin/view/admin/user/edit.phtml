@@ -1,0 +1,154 @@
+<?php
+    use Zend\Session\Container;
+    $sessionLogin = new Container('credo');
+?>
+<div class="bg-body-light">
+    <div class="content content-full">
+        <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+            <h1 class="flex-sm-fill font-size-h2 font-w400 mt-2 mb-0 mb-sm-2">Users</h1>
+            <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <a href="<?php echo $this->url('admin-user', array('action' => 'index')); ?>">
+                        <li class="breadcrumb-item">User Details</li>
+                    </a>
+                    <li class="breadcrumb-item active" aria-current="page">&nbsp;/ Edit</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+
+<div class="content">
+    <div class="block block-rounded block-bordered">
+        <div class="block-header block-header-default">
+            <h3 class="block-title">Edit Users Details</h3>
+        </div>
+        <div class="block-content">
+            <form name="userInformation" id="userInformation" class="mb-5" action="<?php echo $this->url('admin-user', array('action' => 'edit')); ?>" method="post">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="userName">Username<span class="mandatory">*</span></label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control isRequired" id="userName" name="userName" placeholder="Enter the username" title="Please enter the username" value="<?php echo $user['user_name']; ?>" onblur="checkNameValidation('user', 'user_name', this, '<?php echo "user_id##" . $user['user_id']; ?>', 'Entered username exist . Please enter an another username.')" >
+                        <input type="hidden" name="userId" id="userId" value="<?php echo base64_encode($user['user_id']); ?>" />
+                    </div>
+
+                    <label class="col-sm-2 col-form-label" for="role">Role<span class="mandatory">*</span></label>
+                    <div class="col-sm-4">
+                        <select class="form-control isRequired" id="role" name="role" title="Please select the role name">
+                            <option value="">--Select--</option>
+                            <?php foreach($roleData as $role) {?>
+                            <option value="<?php echo $role['role_id']; ?>" <?php echo (($user['role'] == $role['role_id']) ? "selected='selected'" : "") ?>><?php echo $role['role_name']; ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="gender">Gender<span class="mandatory">*</span></label>
+                    <div class="col-sm-4">
+                        <label class="radio-inline">
+                            <input type="radio" class="layCek isRequired" name="gender" id="male" value="male" title="Please check gender" <?php echo ($user['gender'] == 'male') ? "checked='checked'" : ''; ?>> Male
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" class="layCek" name="gender" id="female" value="female" title="Please check gender" <?php echo ($user['gender'] == 'female') ? "checked='checked'" : ''; ?>> Female
+                        </label>
+                    </div>
+
+                    <label class="col-sm-2 col-form-label" for="email">Email<span class="mandatory">*</span></label>
+                    <div class="col-sm-4">
+                        <input type="email" class="form-control isEmail isRequired" id="email" name="email" placeholder="Enter the email" title="Please enter the email" value="<?php echo $user['email']; ?>" onblur="checkNameValidation('user', 'email', this, '<?php echo "user_id##" . $user['user_id']; ?>', 'Entered email exist . Please enter an another email id.')" >
+                    </div>
+                </div>
+                
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="alternateEmail">Alternate Email</label>
+                    <div class="col-sm-4">
+                        <input type="email" value="<?php echo $user['alternate_email']; ?>" class="form-control isEmail" id="alternateEmail" name="alternateEmail" placeholder="Enter the valid alternate email" title="Please enter the valid alternate email" onblur="checkNameValidation('user', 'alternate_email', this,null, 'The email that you entered already exists . Please try another id..');">
+                    </div>
+
+                    <label class="col-sm-2 col-form-label" for="mobileNumber">Mobile No<span class="mandatory">*</span></label>
+                    <div class="col-sm-4">
+                        <input type="number" value="<?php echo $user['contact_no']; ?>"  class="form-control isMobile isRequired" id="mobileNumber" name="mobileNumber" placeholder="Enter the mobile" title="Please enter the 10 digit valid mobile">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="alternateNumber">Alternate Mobile No</label>
+                    <div class="col-sm-4">
+                        <input type="number" value="<?php echo $user['alternate_contact']; ?>" class="form-control isMobile" id="alternateNumber" name="alternateNumber" placeholder="Enter the alternate mobile" title="Please enter the valid 10 digit alternate mobile no">
+                    </div>
+
+                    <label class="col-sm-2 col-form-label" for="password">Password</label>
+                    <div class="col-sm-4">
+                        <input type="password" class="form-control isPassword" id="password" name="password" placeholder="Enter the Password" title="Please make sure password and confirm password are same">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="confirmPassword">Confim Password</label>
+                    <div class="col-sm-4">
+                        <input type="password" class="form-control isPassword" id="confirmPassword" name="password" placeholder="Enter the Password" title="Please make sure password and confirm password are same">
+                    </div>
+
+                    <label class="col-sm-2 col-form-label" for="status">Status<span class="mandatory">*</span></label>
+                    <div class="col-sm-4">
+                        <select class="form-control isRequired" id="status" name="status" title="Please select the user status">
+                            <option value="active" <?php echo ($user['user_status'] == 'active')?'selected=selected':'';?>>Active</option>
+                            <option value="inactive" <?php echo ($user['user_status'] == 'inactive')?'selected=selected':'';?>>Inactive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="address">Address</label>
+                    <div class="col-sm-4">
+                        <textarea class="form-control" id="address" rows="4" cols="50" name="address" placeholder="Enter the address" title="Please enter the address"><?php echo $user['address']; ?></textarea>
+                    </div>
+                </div>
+                <div class="row items-push submit">
+                    <div class="col-lg-7 offset-lg-4">
+                        <a href="<?php echo $this->url('admin-user', array('action' => 'index')); ?>" class="btn btn-hero-dark">Cancel</a>&nbsp;
+                        <button type="submit" class="btn btn-hero-primary" onclick="validateNow();return false;"><i class="fa fa-fw fa-check"></i> Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    duplicateName = true;
+
+    function validateNow() {
+        flag = deforayValidator.init({
+            formId: 'userInformation'
+        });
+        if (flag) {
+            if (duplicateName) {
+                $.blockUI();
+                document.getElementById('userInformation').submit();
+            }
+        }
+    }
+
+    function checkNameValidation(tableName, fieldName, obj, fnct, msg) {
+        checkValue = document.getElementById(obj.id).value;
+        if ($.trim(checkValue) != '') {
+            $.post("<?php echo $this->url('common', array('action' => 'index')); ?>", {
+                tableName: tableName,
+                fieldName: fieldName,
+                value: checkValue,
+                fnct: fnct
+            },
+            function(data) {
+                if (data > 0) {
+                    alert(msg);
+                    duplicateName = false;
+                    document.getElementById(obj.id).value = "";
+                } else {
+                    duplicateName = true;
+                }
+            });
+        }
+    }
+</script>

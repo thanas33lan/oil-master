@@ -1,0 +1,198 @@
+<style type="text/css">
+.layCek{
+    display:inline-block;
+    width:17px;
+    height:17px;
+    margin:-1px 3px 0 0;
+    vertical-align:middle;
+    cursor:pointer;
+}
+</style>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>Update Profile<!--<small>Preview</small>--></h1>
+</section>
+<!-- Main content -->
+<section class="content">
+
+    <!-- left column -->
+    <div class="">
+        <!-- general form elements -->
+        <div class="box box-primary">
+            <div class="box-header">
+                <div class="pull-right" style="font-size:15px;"><span class="mandatory">*</span> indicates required field &nbsp;</div> 
+            </div><!-- /.box-header -->
+            <!-- form start -->
+            <form role="form" class="form-horizontal" name="editEmployee" id="editEmployee"  method="post" action="<?php echo $this->url('admin-login', array('action' => 'edit')); ?>" autocomplete="off">
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="firstName" class="col-sm-3 control-label">First name <span class="mandatory">*</span></label>
+                                <div class="col-sm-8" style="width:69%;">
+                                    <input type="hidden" class="form-control isRequired" name="employeeId" id="employeeId" value="<?php echo base64_encode($employeeData->employee_id); ?>"/>
+                                    <input type="text" class="form-control isRequired" name="firstName" id="firstName" placeholder="Enter first name" title="Please enter the first name" value="<?php echo $employeeData->first_name; ?>"/>
+                                </div>
+                            </div>
+                        </div>                   
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="lastName" class="col-sm-3 control-label">Last name <span class="mandatory">*</span></label>
+                                <div class="col-sm-8" style="width:69%;">
+                                    <input type="text" class="form-control isRequired" name="lastName" id="lastName" placeholder="Enter last name" title="Please enter the last name" value="<?php echo $employeeData->last_name; ?>"/>
+                                </div>
+                            </div>
+                        </div>  
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="login" class="col-sm-3 control-label">Gender <span class="mandatory">*</span></label>
+                                <div class="col-sm-8" style="width:69%;">
+                                    <label class="radio-inline">
+                                        <input type="radio" class="layCek isRequired" name="gender" id="male" value="male" title="Please check gender" <?php if($employeeData->gender == 'male') { echo 'checked=checked'; } ?>> Male
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input class="layCek" type="radio" name="gender" id="female" value="female" title="Please check gender" <?php if($employeeData->gender == 'female') { echo 'checked=checked'; } ?>> Female
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email" class="col-sm-3 control-label">Email <span class="mandatory">*</span></label>
+                                <div class="input-group col-sm-8" style="padding-left: 14px;width:66%;">
+                                    <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+                                    <input type="text" class="form-control isEmail isRequired" name="email" id="email" placeholder="Enter email" title="Please enter an email id" value="<?php echo $employeeData->email; ?>" onblur="checkNameValidation('employees', 'email', this, '<?php echo "employee_id##" .$employeeData->employee_id; ?>', 'Entered email exist . Please enter an another email id.')"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="mobileNumber" class="col-sm-3 control-label">Mobile no. <span class="mandatory">*</span></label>
+                                <div class="input-group col-sm-8" style="padding-left: 14px;width:66%;">
+                                    <span class="input-group-addon"><i class="fa fa-mobile"></i></span>
+                                    <input type="text" class="form-control isRequired checkNum" name="mobileNumber" id="mobileNumber" placeholder="Enter mobile no." title="Please enter the mobile number" value="<?php echo $employeeData->mobile; ?>" onblur="checkNameValidation('employees', 'mobile', this, '<?php echo "employee_id##" .$employeeData->employee_id; ?>', 'Entered mobile number exist . Please enter an another mobile number')"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="address" class="col-sm-3 control-label">Address <span class="mandatory">*</span></label>
+                                <div class="col-sm-8" style="width:69%;">
+                                    <textarea class="form-control isRequired" name="address" id="address" placeholder="Enter address" title="Please enter the address" style="height:84px;max-height:100px;"><?php echo $employeeData->address; ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="password" class="col-sm-3 control-label">Password <span id="dyn-pwd" class="mandatory" style="display:none;">*</span></label>
+                                <div class="col-sm-8" style="width:69%;">
+                                    <input type="password" class="form-control pwd" name="password" id="password" placeholder="Enter password" title="Please enter the password" onblur="ValidatePassword();"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="confirmPassword" class="col-sm-3 control-label">Confim password</label>
+                                <div class="col-sm-8" style="width:69%;">
+                                    <input type="password" class="form-control cPwd" name="confirmPassword" id="confirmPassword" placeholder="Enter confirm password" title="Please enter the confirm password" onblur="ValidatePassword();"/>                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!-- /.box-body -->
+
+                <div class="box-footer">
+                    <input type="hidden" name="role" value="<?php echo base64_encode($employeeData->role_id); ?>"/>
+                    <input type="hidden" name="employeeStatus" value="<?php echo $employeeData->emp_status; ?>"/>
+                    <input type="button" class="btn btn-primary" value="Update" onclick="validateNow();return false;">
+                    <a href="<?php echo $this->url('admin-employee', array('action' => 'index')); ?>" class="btn btn-default">Cancel</a>
+                </div>
+            </form>
+
+        </div><!-- /.box -->
+    </div><!--/.col (left) -->
+</section><!-- /.content -->
+
+<script type="text/javascript">
+    duplicateName = true;
+    function validateNow() {
+
+        flag = deforayValidator.init({
+            formId: 'editEmployee'
+        });
+        if (flag) {
+            if (duplicateName) {
+                if ($('#role').select2('val') == '') {
+                    alert('Please choose the role to continue');
+                    $('#role').select2('focus');
+                    return;
+                }
+                $.blockUI();
+                document.getElementById('editEmployee').submit();
+            }
+        }
+    }
+    
+    $(document).ready(function() {
+       $("#role").select2({
+            placeholder: "Choose role",
+            allowClear: true,
+            width: "100%"
+        });
+    });
+    
+    function checkNameValidation(tableName, fieldName, obj, fnct, msg){
+        checkValue = document.getElementById(obj.id).value;
+        $.post("<?php echo $this->url('common', array('action' => 'index')); ?>", {tableName: tableName, fieldName: fieldName, value: checkValue, fnct: fnct},
+        function(data) {
+            if (data > 0)
+            {
+                alert(msg);
+                duplicateName = false;
+                document.getElementById(obj.id).value = "";
+            }
+            else {
+                duplicateName = true;
+            }
+        });
+    }
+    
+    function ValidatePassword(){
+        pwd = $('#password').val();
+        confirmPwd = $('#confirmPassword').val();
+        
+        if(pwd !=''){
+           $( ".cPwd" ).addClass( "isRequired" );
+        }else{
+            $( ".cPwd" ).removeClass( "isRequired" );
+        }
+        
+        if(confirmPwd !=''){
+           $( ".pwd" ).addClass( "isRequired" );
+           $( "#dyn-pwd" ).show();
+        }else{
+            $( ".pwd" ).removeClass( "isRequired" );
+            $( "#dyn-pwd" ).hide();
+        }
+        if (pwd != '' && confirmPwd != '') {
+           if (pwd != confirmPwd) {
+            alert('Password mismatched');
+            $('#password').val("");
+            $('#confirmPassword').val("");
+            $( "#dyn-cpwd" ).hide();
+            $( "#dyn-pwd" ).hide();
+            $('#password').focus();
+           }
+        }
+    }
+</script>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<?php
+
+use Zend\Session\Container;
+
+$container = new Container('alert');
+$userLogincontainer = new Container('userLoginContainer');
+$catFileResult = $this->GetCategoryFileList();
+?>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="icon" href="<?php echo $this->basePath() . '/uploads/image/favicon.png'; ?>" type="image/png">
+	<title>Vendhan lubricants</title>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="<?php echo $this->basePath() . '/site/css/bootstrap.css'; ?>">
+	<link rel="stylesheet" href="<?php echo $this->basePath() . '/site/vendors/linericon/style.css'; ?>">
+	<link rel="stylesheet" href="<?php echo $this->basePath() . '/site/css/font-awesome.min.css'; ?>">
+	<link rel="stylesheet" href="<?php echo $this->basePath() . '/site/vendors/owl-carousel/owl.carousel.min.css'; ?>">
+	<link rel="stylesheet" href="<?php echo $this->basePath() . '/site/vendors/lightbox/simpleLightbox.css'; ?>">
+	<link rel="stylesheet" href="<?php echo $this->basePath() . '/site/vendors/nice-select/css/nice-select.css'; ?>">
+	<!-- main css -->
+	<link rel="stylesheet" href="<?php echo $this->basePath() . '/site/css/style.css'; ?>">
+	<link rel="stylesheet" href="<?php echo $this->basePath() . '/site/css/responsive.css'; ?>">
+</head>
+
+<body>
+	<!--================Header Area =================-->
+	<header class="header_area">
+		<div class="header_top">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-6 col-5">
+						<ul class="nav social_icon">
+							<li><a href="#"><i class="fa fa-facebook"></i></a></li>
+							<li><a href="#"><i class="fa fa-twitter"></i></a></li>
+							<li><a href="#"><i class="fa fa-dribbble"></i></a></li>
+							<li><a href="#"><i class="fa fa-behance"></i></a></li>
+						</ul>
+					</div>
+					<div class="col-sm-6 col-7">
+						<div class="top_btn d-flex justify-content-end">
+							<a href="#">My Account</a>
+							<a href="#">Donate Now</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<nav class="navbar navbar-expand-lg navbar-light">
+			<div class="container">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<a class="navbar-brand logo_h" href="/"><img src="<?php echo $this->basePath() . '/uploads/image/Logo.png'; ?>" alt=""></a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+					<ul class="nav navbar-nav menu_nav ml-auto">
+						<li class="nav-item home active allmenu"><a class="nav-link" href="<?php echo $this->url('home', array('action' => 'index')); ?>">Home</a></li>
+						<li class="nav-item contact allmenu"><a class="nav-link" href="<?php echo $this->url('contact', array('action' => 'contact')); ?>">Contact</a></li>
+						<li class="nav-item about-us allmenu"><a class="nav-link" href="<?php echo $this->url('about-us', array('action' => 'index')); ?>">About</a></li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li class="nav-item"><a href="#" class="search"><i class="lnr lnr-magnifier"></i></a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<!--================Header Area =================-->
+	<div class="main-content" style=" margin-top: 8%; ">
+		<?php echo $this->content; ?>
+	</div>
+	<!--================ start footer Area  =================-->
+	<footer class="footer-area section_gap">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-3  col-md-6 col-sm-6">
+					<div class="single-footer-widget">
+						<h6 class="footer_title">About Agency</h6>
+						<p>The world has become so fast paced that people don’t want to stand by reading a page of information, they would much rather look at a presentation and understand the message. It has come to a point </p>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6">
+					<div class="single-footer-widget">
+						<h6 class="footer_title">Navigation Links</h6>
+						<div class="row">
+							<div class="col-4">
+								<ul class="list_style">
+									<li><a href="#">Home</a></li>
+									<li><a href="#">Feature</a></li>
+									<li><a href="#">Services</a></li>
+									<li><a href="#">Portfolio</a></li>
+								</ul>
+							</div>
+							<div class="col-4">
+								<ul class="list_style">
+									<li><a href="#">Team</a></li>
+									<li><a href="#">Pricing</a></li>
+									<li><a href="#">Blog</a></li>
+									<li><a href="#">Contact</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6">
+					<div class="single-footer-widget">
+						<h6 class="footer_title">Newsletter</h6>
+						<p>For business professionals caught between high OEM price and mediocre print and graphic output, </p>
+						<div id="mc_embed_signup">
+							<form target="_blank" action="https://spondonit.us12.list-manage.com/subscribe/post?u=1462626880ade1ac87bd9c93a&amp;id=92a4423d01" method="get" class="subscribe_form relative">
+								<div class="input-group d-flex flex-row">
+									<input name="EMAIL" placeholder="Email Address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email Address '" required="" type="email">
+									<button class="btn sub-btn"><span class="lnr lnr-location"></span></button>
+								</div>
+								<div class="mt-10 info"></div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6">
+					<div class="single-footer-widget instafeed">
+						<h6 class="footer_title">InstaFeed</h6>
+						<ul class="list_style instafeed d-flex flex-wrap">
+							<li><img src="<?php echo $this->basePath() . '/uploads/image/instagram/Image-01.jpg'; ?>" alt=""></li>
+							<li><img src="<?php echo $this->basePath() . '/uploads/image/instagram/Image-02.jpg'; ?>" alt=""></li>
+							<li><img src="<?php echo $this->basePath() . '/uploads/image/instagram/Image-03.jpg'; ?>" alt=""></li>
+							<li><img src="<?php echo $this->basePath() . '/uploads/image/instagram/Image-04.jpg'; ?>" alt=""></li>
+							<li><img src="<?php echo $this->basePath() . '/uploads/image/instagram/Image-05.jpg'; ?>" alt=""></li>
+							<li><img src="<?php echo $this->basePath() . '/uploads/image/instagram/Image-06.jpg'; ?>" alt=""></li>
+							<li><img src="<?php echo $this->basePath() . '/uploads/image/instagram/Image-07.jpg'; ?>" alt=""></li>
+							<li><img src="<?php echo $this->basePath() . '/uploads/image/instagram/Image-08.jpg'; ?>" alt=""></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="border_line"></div>
+			<div class="row footer-bottom d-flex justify-content-between align-items-center">
+				<p class="col-lg-8 col-sm-8 footer-text m-0">
+					<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+					Copyright &copy;<script>
+						document.write(new Date().getFullYear());
+					</script> All rights reserved by <a href="https://www.samwintech.com" target="_blank">samwintech.com</a>
+					<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+				</p>
+				<div class="col-lg-4 col-sm-4 footer-social">
+					<a href="#"><i class="fa fa-facebook"></i></a>
+					<a href="#"><i class="fa fa-twitter"></i></a>
+					<a href="#"><i class="fa fa-dribbble"></i></a>
+					<a href="#"><i class="fa fa-behance"></i></a>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!--================ End footer Area  =================-->
+
+
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="<?php echo $this->basePath() . '/site/js/jquery-3.2.1.min.js'; ?>"></script>
+	<script src="<?php echo $this->basePath() . '/site/js/popper.js'; ?>"></script>
+	<script src="<?php echo $this->basePath() . '/site/js/bootstrap.min.js'; ?>"></script>
+	<script src="<?php echo $this->basePath() . '/site/vendors/owl-carousel/owl.carousel.min.js'; ?>"></script>
+	<script src="<?php echo $this->basePath() . '/site/js/jquery.ajaxchimp.min.js'; ?>"></script>
+	<script src="<?php echo $this->basePath() . '/site/js/mail-script.js'; ?>"></script>
+	<script src="<?php echo $this->basePath() . '/site/js/mail-script.js'; ?>"></script>
+	<script src="<?php echo $this->basePath() . '/site/js/stellar.js'; ?>"></script>
+	<script src="<?php echo $this->basePath() . '/site/vendors/lightbox/simpleLightbox.min.js'; ?>"></script>
+	<script src="<?php echo $this->basePath() . '/site/vendors/flipclock/timer.js'; ?>"></script>
+	<script src="<?php echo $this->basePath() . '/site/vendors/nice-select/js/jquery.nice-select.min.js'; ?>"></script>
+	<script src="<?php echo $this->basePath() . '/site/js/custom.js'; ?>"></script>
+	<script type="text/javascript">
+		str = $(location).attr('pathname');
+        splitsUrl = str.split("/", 4);
+		if (splitsUrl[1] == "contact") {
+			$(".allmenu").removeClass("active");
+			$(".contact").addClass("active");
+		} else if (splitsUrl[1] == "about-us") {
+			$(".allmenu").removeClass("active");
+			$(".about-us").addClass("active");
+		} else{
+			$(".allmenu").removeClass("active");
+			$(".home").addClass("active");
+		}
+		$(document).ready(function() {
+			<?php
+			if (isset($container->alertMsg) && $container->alertMsg != "") {
+				?>
+			alert("<?php echo $container->alertMsg; ?>");
+			<?php
+				$container->alertMsg = "";
+				unset($container->alertMsg);
+			}
+			?>
+		});
+
+		function validateNow() {
+			flag = deforayValidator.init({
+				formId: 'contact'
+			});
+			if (flag) {
+				challenge_field = document.getElementById("challengeResponse").value;
+
+				if (challenge_field != "") {
+					$.post("<?php echo $this->url('checkcaptcha', array('action' => 'check-captcha')); ?>", {
+							challenge_field: challenge_field
+						},
+						function(data) {
+							if (data == 'fail') {
+								alert("Text you entered from the image is incorrect. Please try again", "err");
+								getCaptcha('capDiv');
+								document.getElementById("challengeResponse").value = "";
+								return false;
+							} else {
+								document.getElementById("contact").submit();
+							}
+						});
+				} else {
+					alert("Please enter the text from the image to proceed.", "err");
+				}
+			}
+		}
+
+		function getCaptcha(captchaDivId) {
+			var d = new Date();
+			var randstr = 'r-' + d.getFullYear() + d.getSeconds() + d.getMilliseconds() + Math.random();
+			$("#" + captchaDivId).attr("src", '/captcha/' + randstr);
+			$("#" + captchaDivId).load(function() {
+
+			});
+		}
+
+		$(".checkNum").keydown(function(e) {
+			// Allow: backspace, delete, tab, escape, enter and .
+			if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+				// Allow: Ctrl+A
+				(e.keyCode == 65 && e.ctrlKey === true) ||
+				// Allow: home, end, left, right
+				(e.keyCode >= 35 && e.keyCode <= 39)) {
+				// let it happen, don't do anything
+				return;
+			}
+			// Ensure that it is a number and stop the keypress
+			if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+				e.preventDefault();
+			}
+		});
+
+		function showModal(url, w, h) {
+			showdefModal('dDiv', w, h);
+			document.getElementById('dFrame').style.height = h + 'px';
+			document.getElementById('dFrame').style.width = w + 'px';
+			document.getElementById('dFrame').src = url;
+		}
+
+		function closeModal() {
+			document.getElementById('dFrame').src = "";
+			hidedefModal('dDiv');
+		}
+
+	</script>
+</body>
+
+</html>

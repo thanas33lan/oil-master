@@ -1,0 +1,217 @@
+<?php
+
+use Zend\Session\Container;
+
+$sessionLogin = new Container('user');
+$role = $sessionLogin->roleCode;
+
+$acl = $this->layout()->acl;
+if ($acl->isAllowed($role, 'Admin\Controller\Customer', 'edit')) {
+	$setPDisabled 	= "";
+}else{
+	$setPDisabled 	= "disabled";
+}
+if (isset($acl) && $acl->isAllowed($role, 'Admin\Controller\Customer', 'edit')) {
+    $editAction = ' {"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center",bSortable:false}';
+} else {
+    $editAction = ' {"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center"}';
+}
+?>
+<style>
+.jcr,.jpr {
+    border-radius: 10px;
+}
+.filter-class {
+    border: 1px solid #e2e0e0;
+    padding: 10px;
+    margin: 10px;
+}
+
+.filter-class-heading {
+    margin-top: -20px;
+    background: white;
+    width: fit-content;
+    padding: 0px 10px;
+    color: gray;
+}
+
+.h3,
+h3 {
+    font-size: 1.0rem;
+}
+
+td.center.inline {
+    /* display: -webkit-inline-box; */
+    text-align: center;
+}
+
+.custom-control.custom-switch {
+    padding-top: 7px;
+}
+thead th:last-child,
+tbody td:last-child {
+    position: sticky;
+    right: 0px;
+    z-index: 1;
+    background: white;
+}
+table.dataTable tr th.select-checkbox.selected::after {
+    content: "✔";
+    margin-top: -11px;
+    margin-left: -4px;
+    text-align: center;
+    text-shadow: rgb(176, 190, 217) 1px 1px, rgb(176, 190, 217) -1px -1px, rgb(176, 190, 217) 1px -1px, rgb(176, 190, 217) -1px 1px;
+}
+</style>
+<div class="bg-body-light">
+    <div class="content content-full">
+        <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+            <h1 class="flex-sm-fill font-size-h2 font-w400 mt-2 mb-0 mb-sm-2">Customers</h1>
+            <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <?php if (isset($acl) && $acl->isAllowed($role, 'Admin\Controller\Customer', 'add')) {?>
+                        <a href="<?php echo $this->url('admin-customer', array('action' => 'add')); ?>" class="btn btn-hero-primary pull-right" style="margin-top:-5px;"><i class="fa fa-plus"></i>&nbsp;Add New Customer</a>
+                        <?php }?>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="block block-rounded block-bordered">
+        <div class="block-header block-header-default">
+        </div>
+        <div class="block-content block-content-full">
+            <div class="m-3 bg-gray-airtel p-4 selectV" style="display:none;">
+                <div class="sa sc text-center">
+                    <span><b class="selectC">0</b> customers on this page are selected.</span> 
+                    <a href="javascript:void(0);" onclick="selectAllJob();"><span id="sall" class="label text-danger cursor-pointer spr">Select all <b class="selectAll">0</b> active customers</span></a>
+                    <a href="javascript:void(0);" class="btn btn-outline-success js-click-ripple-enabled" data-toggle="modal" data-target="#modal-block-popin" data-action="side_overlay_toggle" style=" float: right;margin-top: -7px; ">Send SMS <i class="fa fa-check fa-xs"></i></a> 
+                </div>
+            </div>
+            <table id="customerDataTable" class="table table-bordered table-striped table-vcenter">
+                <thead>
+                    <tr>
+                        <!-- <th class="text-center" style="width: 70px;">
+                            <div class="custom-control custom-checkbox custom-control-primary d-inline-block" title="Select all customer to send message alert">
+                                <input type="checkbox" class="custom-control-input" id="customerSMSR" name="customerSMSR" onchange="checkAll(this,'root');" <?php echo $setPDisabled;?>>
+                                <label class="custom-control-label" for="customerSMSR"></label>
+                            </div>
+                        </th> -->
+                        <th>Serial no</th>
+                        <th>Name</th>
+                        <th>Mobile No.</th>
+                        <th>Recceiver Name</th>
+                        <th>Status</th>
+                        <?php if (isset($acl) && $acl->isAllowed($role, 'Admin\Controller\Customer', 'edit')) { ?>
+                        <th>Action</th>
+                        <?php } ?>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="6" class="dataTables_empty">Loading data from server</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var customerId = [];
+    var allflag = 0;
+    /* Table initialisation */
+    oTable = null;
+    $(document).ready(function() {
+        oTable = $('#customerDataTable').dataTable({
+            "bAutoWidth": false,
+            "bProcessing": true,
+            "bServerSide": true,
+            "stateSave": true,
+            "aoColumns": [
+                <?php echo $editAction; ?>
+            ],
+            "sAjaxSource": "<?php echo $this->url('admin-customer', array('action' => 'index')); ?>",
+            "fnServerData": function(sSource, aoData, fnCallback) {
+                $.ajax({
+                    "dataType": 'json',
+                    "type": "POST",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": function (json) {
+                        fnCallback(json);
+                        var checkBoxes=document.getElementsByName("customerSMS[]");
+                        len = checkBoxes.length;
+                        for(c=0;c<len;c++){
+                            if (jQuery.inArray(checkBoxes[c].value,customerId) != -1 )
+                            {
+                                checkBoxes[c].setAttribute("checked",true);
+                            }
+                        }
+                }
+                });
+            }
+        });
+    });
+    
+    function afterCallback(){
+        customerId = [];
+        $('.selectC').text($("input[name='customerSMS[]']:checked").length);
+        $.post("<?php echo $this->url('admin-customer', array('action' => 'get-count')); ?>",
+        function(data) {
+            if (data > 0 || data == null || data == undefined) {
+                $('.selectAll').text(data);
+            }
+        });
+        $.each($("input[name='customerSMS[]']:checked"), function(){
+            customerId.push($(this).val());
+        });
+    }
+
+    function checkAll(obj,flagcheck){
+        $('.selectV').fadeIn( "slow", function() {});
+        if(flagcheck == "root"){
+            if($(obj).prop('checked') == true){
+                $("input[name='customerSMS[]']:checkbox").prop('checked',true);
+            }else{
+                $("input[name='customerSMS[]']:checkbox").prop('checked',false);
+            }
+        }
+        afterCallback();
+        allflag = 0;
+    }
+
+    function selectAllJob(){
+        allflag = 1;
+        $("input[name='customerSMS[]']:checkbox").prop('checked',true);
+        afterCallback();
+    }
+
+    function sendSMS(){
+        // console.log(customerId);return;
+        if($('#smstxt').val() != ""){
+            if(confirm('Are you sure want to send SMS to those customer?')){
+                $.blockUI();
+                $.post("<?php echo $this->url('admin-customer', array('action' => 'send-sms')); ?>", {customerId: customerId.join(','), allStatus : allflag, message:$('#smstxt').val()},
+                function(data) {
+                    if (data > 0) {
+                        $.unblockUI();
+                        $("input[name='customerSMS']:checkbox").prop('checked',false);
+                        alert('SMS was send for the selected customers.');
+                        location.reload();
+                    }else{
+                        alert('Something went wrong check your SMS API credentials','err');
+                        $.unblockUI();
+                    }
+                });
+                afterCallback();
+            }
+        }else{
+            alert('Please enther the message to send','err');
+        }
+    }
+
+</script>

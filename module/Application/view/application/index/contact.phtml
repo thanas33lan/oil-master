@@ -1,0 +1,111 @@
+<?php 
+    $config = new \Zend\Config\Reader\Ini();
+    $configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
+    $apiKey = $configResult['map']['apiKey'];
+?>
+<!--================Breadcrumb Area =================-->
+<section class="breadcrumb_area br_image">
+    <div class="container">
+        <div class="page-cover text-center">
+            <h2 class="page-cover-tittle">Contact Us</h2>
+            <ol class="breadcrumb">
+                <li><a href="index.html">Home</a></li>
+                <li class="active">Contact Us</li>
+            </ol>
+        </div>
+    </div>
+</section>
+<!--================Breadcrumb Area =================-->
+
+<!--================Contact Area =================-->
+<section class="contact_area section_gap" style=" padding: 75px 0; ">
+    <div class="container">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.158427787148!2d80.23555791482192!3d12.961712290862392!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a525d0c00d1ee3d%3A0xfc55e8d8595315d8!2sCSI%20Immanuel%20Church!5e0!3m2!1sen!2sin!4v1566840109233!5m2!1sen!2sin" width="1150" height="420" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+        <div class="row" style=" padding-top: 40px; ">
+            <div class="col-md-3">
+                <div class="contact_info">
+                    <div class="info_item">
+                        <i class="lnr lnr-home"></i>
+                        <h6>Vendhan lubricants</h6>
+                        <p>4-2-35, sri ram street, Sambavarvadakarai, Tenkasi, Tamil Nadu 627856</p>
+                    </div>
+                    <div class="info_item">
+                        <i class="lnr lnr-phone-handset"></i>
+                        <h6><a href="phone:9566912346">(+91) 95669 12346</a></h6>
+                        <p><a href="phone:9994027557">(+91) 99940 27557</a></p>
+                    </div>
+                    <div class="info_item">
+                        <i class="lnr lnr-envelope"></i>
+                        <h6><a href="mailto:vendhanlubricants@gmail.com">vendhanlubricants@gmail.com</a></h6>
+                        <p>Send us your query anytime!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <form class="row contact_form" action="contact_process.php" method="post" id="contactForm" novalidate="novalidate">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name">
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email address">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="subject" name="subject" placeholder="Enter Subject">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <textarea class="form-control" name="message" id="message" rows="1" placeholder="Enter Message"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-12 text-right">
+                        <button type="submit" value="submit" class="btn btn_hover btn_hover_two">Send Message</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<!--================Contact Area =================-->
+
+<!--================Contact Success and Error message Area =================-->
+<div id="success" class="modal modal-message fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="fa fa-close"></i>
+                </button>
+                <h2>Thank you</h2>
+                <p>Your message is successfully sent...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modals error -->
+
+<div id="error" class="modal modal-message fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="fa fa-close"></i>
+                </button>
+                <h2>Sorry !</h2>
+                <p> Something went wrong </p>
+            </div>
+        </div>
+    </div>
+</div>
+<!--================End Contact Success and Error message Area =================-->
+<!--gmaps Js-->
+<script src="https://maps.googleapis.com/maps/api/js?key=<?php echo $apiKey;?>"></script>
+<script src="<?php echo $this->basePath() . '/site/js/gmaps.min.js'; ?>"></script>
+<!-- contact js -->
+<script src="<?php echo $this->basePath() . '/site/js/jquery.form.js'; ?>"></script>
+<script src="<?php echo $this->basePath() . '/site/js/jquery.validate.min.js'; ?>"></script>
+<script src="<?php echo $this->basePath() . '/site/vendors/nice-select/js/jquery.nice-select.min.js'; ?>"></script>
+<script src="<?php echo $this->basePath() . '/site/js/contact.js'; ?>"></script>
+<script src="<?php echo $this->basePath() . '/site/js/custom.js'; ?>"></script>

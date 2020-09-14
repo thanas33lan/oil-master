@@ -1,0 +1,75 @@
+<style>
+.xsubmenu{
+    border:none;
+    float:left;
+	
+	top: -1px;
+	left: 100%;
+	
+	padding: 0;
+	
+	background: #2f3338;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+	border-radius: 0 0 2px 2px;
+	list-style: none;
+}
+.xsubmenu li{
+    float:left;
+    margin-right:10px;;
+    list-style:none;
+    border:1px solid #2f3338;
+    pointer:cursor;
+}
+
+.xsubmenu li:hover {
+	background: #e34735;
+	border-top: 1px solid #e34735;
+	border-bottom: 1px solid #e34735;
+    
+}
+
+.xsubmenu a {
+	padding: 0 20px;
+	line-height: 35px;
+	font-size: 12px;
+	color: #fff;
+	text-transform: uppercase;
+	font-family: 'OpenSansRegular';
+	letter-spacing: 0;
+    display:block;
+}
+
+</style>
+
+<?php
+use Zend\Session\Container;
+$container = new Container('alert');
+$userLogincontainer = new Container('userLoginContainer');
+
+?>
+
+<div style="position:relative;">
+    <div style="position:absolute;top:-60px;right:0;">
+    
+
+
+            <?php
+					$bsUserLogincontainer = new Container('bsUserLoginContainer');
+					if(isset($bsUserLogincontainer->bsUserId) && $bsUserLogincontainer->bsUserId!=''){ ?>
+					
+							<ul class="xsubmenu">
+								<li><a href="/my-account" class="mainMenu myAccountMenu"><i class="fa fa-user"></i> My Profile</a></li>
+								<?php if($bsUserLogincontainer->showCertificateLink=='yes'){ ?>
+								    <li><a href="/my-account/certificate" class="mainMenu myAccountMenu"><i class="fa fa-download"></i> Certificate</a></li>
+								<?php } ?>
+								<li><a href="<?php echo $this->url('biosafety', array('action' => 'logout')); ?>"><i class="fa fa-sign-out"></i> Logout</a></li>
+							</ul>
+						
+					<?php 
+					}
+					?>
+
+
+
+    </div>
+</div>

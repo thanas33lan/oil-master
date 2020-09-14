@@ -1,0 +1,156 @@
+<?php
+use Zend\Session\Container;
+$logincontainer = new Container('customer');
+?>
+<style type="text/css">
+    p{
+    letter-spacing:0.5px;
+    line-height:20px;
+    font-family:Calibri;
+    font-size:14px;
+}
+.destination{
+    font: italic 14px/16px Droid Serif,sans-serif;
+    color: #999;
+}
+.destination-place{
+    color: #333;
+    font: 13px/16px Droid Sans,arial;
+}
+.note{
+    font: 14px/15px Arial, Arial Unicode MS, Helvetica, sans-serif;
+    font-size: 11px;
+    line-height: 11px;
+    clear: both;
+    color: #999;
+    font-style: normal;
+}
+.book-now{
+    border:1px solid #0599d3;
+    border-radius:5px;
+    color:#fff;
+    font-weight:700;
+    background-color:#0599d3;
+}
+.btn-xs{
+    font-family:arial;
+    font-size: 11px;
+}
+</style>
+<?php
+$agentPlaceCount = count($pkgData['agentPlaceResult']);
+if($agentPlaceCount > 1){
+    $noOfAgent = $agentPlaceCount.' agents';
+}else{
+    $noOfAgent = $agentPlaceCount.' agent';
+}
+?>
+<section class="content-header">
+    <div style="font-family:Calibri;padding-bottom:10px;font-size:20px;"><strong>Find <?php echo $noOfAgent; ?> for your <?php echo ucwords($pkgData['pkResult'][0]['package_name']); ?> package</strong></div>
+</section>
+<div style="float:left;width:100%;padding-top:20px;padding-bottom:20px;">
+    <?php
+    $tempUCPlace = array();
+     if($pkgData['pkResult'][0]['day'] > 1 ){
+        $noOfDay = $pkgData['pkResult'][0]['day'].' Days';
+    }else{
+        $noOfDay = $pkgData['pkResult'][0]['day'].' Day';
+    }
+    if($pkgData['pkResult'][0]['night'] > 1 ){
+        $noOfNight = $pkgData['pkResult'][0]['night'].' Nights';
+    }else{
+        $noOfNight = $pkgData['pkResult'][0]['night'].' Night';
+    }
+    $pkImg = explode(',',$pkgData['pkResult'][0]['pkImg']);
+    $tempPlace = array_unique(explode(',',$pkgData['pkResult'][0]['placeName']));
+    for($i=0;$i<count($tempPlace); $i++){
+        $tempUCPlace[] = ucwords($tempPlace[$i]);
+    }
+    $destiPlace = implode(',',$tempUCPlace);
+    for($i=0;$i<$agentPlaceCount; $i++){
+        $agentName = $pkgData['agentPlaceResult'][$i]['agent_name'];
+        $agentPkPrice = $pkgData['agentPlaceResult'][$i]['agent_package_price'];
+        $pkDescLength = strlen($pkgData['agentPlaceResult'][$i]['pam_description']);
+        if($pkDescLength > 250) {
+          $agentPkDescription = substr($pkgData['agentPlaceResult'][$i]['pam_description'],0,250).' & more...';
+        }else{
+            $agentPkDescription = $pkgData['agentPlaceResult'][$i]['pam_description'];
+        }
+        ?>
+        <div style="width:100%;float:left;padding-bottom:20px;">
+            <div style="width:18%;float:left;">
+             <?php
+             if(count(array_filter($pkImg)) > 0){
+             ?>
+                <?php if(isset($logincontainer->customerId) && $logincontainer->customerId != '') {
+                     $fileSource = UPLOAD_PATH . DIRECTORY_SEPARATOR . "package" . DIRECTORY_SEPARATOR . $pkgData['pkResult'][0]['package_id'] . DIRECTORY_SEPARATOR . $pkImg[0];
+                     if(file_exists($fileSource)) {
+                    ?>
+                       <a href="javascript:void(0);" onclick="exploreSelectedPackage('<?php echo base64_encode($pkgData['agentPlaceResult'][$i]['pam_id']); ?>');"><img src="/uploads/package/<?php echo $pkgData['pkResult'][0]['package_id']; ?>/<?php echo $pkImg[0]; ?>" style="width:200px !important;height:150px !important;"/></a>
+                    <?php } else { ?>
+                       <a href="javascript:void(0);" onclick="exploreSelectedPackage('<?php echo base64_encode($pkgData['agentPlaceResult'][$i]['pam_id']); ?>');"><img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&text=No image"/></a>
+                    <?php } ?>
+                <?php } else { ?>
+                <a href="javascript:void(0);" onclick="getLoginToRedirect('<?php echo base64_encode($pkgData['agentPlaceResult'][$i]['pam_id']);?>','<?php echo base64_encode($pkgData['agentPlaceResult'][$i]['agent_package_price']);?>');"><img src="/uploads/package/<?php echo $pkgData['pkResult'][0]['package_id']; ?>/<?php echo $pkImg[0]; ?>" style="width:200px !important;height:150px !important;"/></a>
+                <?php } ?>
+             <?php
+             } else { 
+             ?>
+                <?php if(isset($logincontainer->customerId) && $logincontainer->customerId != '') { ?>
+                <a href="javascript:void(0);" onclick="exploreSelectedPackage('<?php echo base64_encode($pkgData['agentPlaceResult'][$i]['pam_id']); ?>');"><img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&text=No image"/></a>
+                <?php } else { ?>
+                <a href="javascript:void(0);" onclick="getLoginToRedirect('<?php echo base64_encode($pkgData['agentPlaceResult'][$i]['pam_id']);?>','<?php echo base64_encode($pkgData['agentPlaceResult'][$i]['agent_package_price']);?>');"><img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&text=No image"/></a>
+                <?php } ?>
+             <?php } ?>
+            </div>
+            <div style="width:82%;float:left;padding-left:2%;">
+                <div style="float:left;width:100%;font:18px/18px Droid Sans,arial;font-family:Droid Sans,arial;font-size:18px;text-decoration:none;padding-bottom:8px;">
+                     <?php if(isset($logincontainer->customerId) && $logincontainer->customerId != '') { ?>
+                         <a href="javascript:void(0);" onclick="exploreSelectedPackage('<?php echo base64_encode($pkgData['agentPlaceResult'][$i]['pam_id']); ?>');"><?php echo ucwords($pkgData['pkResult'][0]['package_name']); ?></a>
+                      <?php } else { ?>
+                         <a href="javascript:void(0);" onclick="getLoginToRedirect('<?php echo base64_encode($pkgData['agentPlaceResult'][$i]['pam_id']);?>','<?php echo base64_encode($pkgData['agentPlaceResult'][$i]['agent_package_price']);?>');"><?php echo ucwords($pkgData['pkResult'][0]['package_name']); ?></a>
+                      <?php } ?>
+                </div>
+                <div style="float:left;width:100%;background:#ececec;height:1px;"></div>
+                <div style="float:left;width:100%;padding-top:8px;padding-bottom:8px;">
+                    <div style="float:left;width:10%;font:18px/18px Droid Sans,arial;font-family:Droid Sans,arial;font-size:18px;"><i class="fa fa-inr"></i> <?php echo $agentPkPrice; ?></div>
+                    <div style="float:left;background:#ececec;width:1px;height:20px;margin-right:2%;"></div>
+                    <div style="float:left;font:18px/18px Droid Sans,arial;font-family:Droid Sans,arial;font-size:18px;"><?php echo $noOfDay.' '.$noOfNight; ?></div>
+                </div>
+                 <div style="float:left;width:100%;background:#ececec;height:1px;"></div>
+                <div style="float:left;width:100%;padding:8px;"><?php echo $agentPkDescription; ?></div>
+                <div style="float:left;width:100%;background:#ececec;height:1px;"></div>
+                <div style="float:left;width:100%;padding-top:8px;padding-bottom:8px;"><div class="destination" style="width:11%;float:left;"><i class="fa fa-map-marker"></i> Destination :</div><div class="destination-place" style="width:89%;float:left;"><?php echo $destiPlace; ?></div></div>
+                <div style="float:left;width:100%;background:#ececec;height:1px;"></div>
+                <div style="float:left;width:100%;padding-top:8px;padding-bottom:8px;">
+                <?php if(isset($logincontainer->customerId) && $logincontainer->customerId != '') { ?>
+                    <a href="javascript:void(0);" onclick="exploreSelectedPackage('<?php echo base64_encode($pkgData['agentPlaceResult'][$i]['pam_id']); ?>');"><button type="button" class="book-now" name="bookNow" id="bookNow" title="Book Ticket">Book Now</button></a>&nbsp&nbsp&nbsp&nbsp<a href="javascript:void(0);" onclick="makeAgentPackageEnquiry('<?php echo base64_encode($pkgData['agentPlaceResult'][$i]['pam_id']); ?>');"><button type="button" class="btn btn-default btn-xs" title="Make Enquiry">Enquiry</button></a>&nbsp&nbsp&nbsp&nbsp<a href="<?php echo'/package/pk-review?pamId='.base64_encode($pkgData['agentPlaceResult'][$i]['pam_id']); ?>" style="font-size:13px;color:#428bca;">Review</a>
+                <?php } else { ?>  
+                    <a href="javascript:void(0);" onclick="getLoginToRedirect('<?php echo base64_encode($pkgData['agentPlaceResult'][$i]['pam_id']);?>','<?php echo base64_encode($pkgData['agentPlaceResult'][$i]['agent_package_price']);?>');"><button type="button" class="book-now" name="bookNow" id="bookNow" title="Book Ticket">Book Now</button></a>&nbsp&nbsp&nbsp&nbsp<a href="javascript:void(0);" onclick="getLoginToRedirect('<?php echo base64_encode($pkgData['pkResult'][0]['package_id']);?>','');"><button type="button" class="btn btn-default btn-xs" title="Make Enquiry">Enquiry</button></a>&nbsp&nbsp&nbsp&nbsp<a href="<?php echo '/login?fromPkreview='.base64_encode($pkgData['agentPlaceResult'][$i]['pam_id']); ?>" style="font-size:13px;color:#428bca;">Review</a>
+                <?php } ?>
+                </div>
+                <div class="note" style="float:left;width:100%;">*Package vendor will get in touch with details</div>
+            </div>
+            <div style="float:left;width:100%;background:#ececec;height:3px;margin-top:20px;margin-bottom:20px;"></div>
+        </div>
+    <?php
+    }
+    ?>
+</div>
+<script type="text/javascript">
+    function exploreSelectedPackage(pamId){
+	window.location.href='/package/pk-details?pamId='+pamId;
+    }
+    
+    function makeAgentPackageEnquiry(pamId){
+        showModal('<?php echo $this->url('package-enquiry'); ?>?pamId=' + pamId, 470, 270);
+    }
+    
+    function getLoginToRedirect(Id,prc){
+        if(prc != '') {
+           window.location.href='/login?fromPkbk='+Id;
+        }else{
+            window.location.href='/login?fromPkview='+Id;
+        }
+    }
+</script>

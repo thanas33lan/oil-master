@@ -1,0 +1,255 @@
+<?php
+
+use Zend\Session\Container;
+
+$sessionLogin = new Container('user');
+$role = $sessionLogin->roleCode;
+
+$acl = $this->layout()->acl;
+if (isset($acl) && $acl->isAllowed($role, 'Admin\Controller\Category', 'edit')) {
+    $editAction = ' {"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center",bSortable:false}';
+} else {
+    $editAction = ' {"sClass":"center"},{"sClass":"center"},{"sClass":"center"}';
+}
+?>
+<style>
+.jcr,.jpr {
+    border-radius: 10px;
+}
+.filter-class {
+    border: 1px solid #e2e0e0;
+    padding: 10px;
+    margin: 10px;
+}
+
+.filter-class-heading {
+    margin-top: -20px;
+    background: white;
+    width: fit-content;
+    padding: 0px 10px;
+    color: gray;
+}
+
+.h3,
+h3 {
+    font-size: 1.0rem;
+}
+
+td.center.inline {
+    /* display: -webkit-inline-box; */
+    text-align: center;
+}
+
+.custom-control.custom-switch {
+    padding-top: 7px;
+}
+thead th:last-child,
+tbody td:last-child {
+    position: sticky;
+    right: 0px;
+    z-index: 1;
+    background: white;
+}
+table.dataTable tr th.select-checkbox.selected::after {
+    content: "✔";
+    margin-top: -11px;
+    margin-left: -4px;
+    text-align: center;
+    text-shadow: rgb(176, 190, 217) 1px 1px, rgb(176, 190, 217) -1px -1px, rgb(176, 190, 217) 1px -1px, rgb(176, 190, 217) -1px 1px;
+}
+</style>
+<div class="bg-body-light">
+    <div class="content content-full">
+        <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+            <h1 class="flex-sm-fill font-size-h2 font-w400 mt-2 mb-0 mb-sm-2">Category</h1>
+            <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <?php if (isset($acl) && $acl->isAllowed($role, 'Admin\Controller\Category', 'add')) {?>
+                        <a href="javascript:void(0);" onclick="showAddForm(this,'add-btn');" class="add-btn btn btn-hero-primary pull-right" style="margin-top:-5px;"><i class="fa fa-plus"></i>&nbsp;Add New Category</a>
+                        <?php }?>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="content show-form" style="display: none;">
+    <div class="block block-rounded block-bordered">
+        <div class="block-header block-header-default">
+            <h3 class="block-title">Add Category Details</h3>
+        </div>
+        <div class="block-content">
+            <form name="categoryInformation" id="categoryInformation" class="mb-5" action="<?php echo $this->url('admin-category', array('action' => 'add')); ?>" method="post">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="name">Name<span class="mandatory">*</span></label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control isRequired" id="name" name="name" placeholder="Enter the name" title="Please enter the name" onblur="checkNameValidation('category', 'category_name', this, null, 'Entered name id exist . Please enter an another name.')">
+                    </div>
+                    <label class="col-sm-2 col-form-label" for="slug">Slug<span class="mandatory">*</span></label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control isRequired" id="slug" name="slug" placeholder="Enter the slug" title="Please enter the slug" onblur="checkNameValidation('category', 'category_slug', this, null, 'Entered slug id exist . Please enter an another slug.')">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="description">Description</label>
+                    <div class="col-sm-4">
+                        <textarea type="text" class="form-control" id="description" name="description" placeholder="Enter the description" title="Please enter the description"></textarea>
+                    </div>
+                    <label class="col-sm-2 col-form-label" for="parentId">Parent Category</label>
+                    <div class="col-sm-4">
+                        <select class="form-control selectpicker isBootstrapSelect" data-selected-text-format="count > 3" data-live-search="true" data-container="body" data-actions-box="true" id="parentId" name="parentId" data-placeholder="Choose one parent category ..." title="Please select the parent category">
+                            <?php if(isset($categorylist) && count($categorylist) > 0){
+                                foreach($categorylist as $category){
+                                    echo '<option value="'.base64_encode($category['category_id']).'">'.$category['category_name'].'</option>';
+                                }
+                            }?>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="status">Status<span class="mandatory">*</span></label>
+                    <div class="col-sm-4">
+                        <select class="form-control isRequired" id="status" name="status" title="Please select the category status">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <hr>
+                <div class="row items-push submit">
+                    <div class="col-lg-7 offset-lg-4">
+                        <a href="javascript:void(0);"  onclick="showAddForm(this,'cancel-btn');" class="btn btn-hero-dark">Cancel</a>&nbsp;
+                        <button type="submit" class="btn btn-hero-primary" onclick="validateNow();return false;"><i class="fa fa-fw fa-check"></i> Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="content">
+    <div class="block block-rounded block-bordered">
+        <div class="block-header block-header-default">
+        </div>
+        <div class="block-content block-content-full table-responsive">
+            <table id="customerDataTable" class="table table-bordered table-striped table-vcenter">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <?php if (isset($acl) && $acl->isAllowed($role, 'Admin\Controller\Category', 'edit')) { ?>
+                        <th>Action</th>
+                        <?php } ?>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="4" class="dataTables_empty" align="center">Loading data from server</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var customerId = [];
+    duplicateName = true;
+    $(document).ready(function(){
+		$("#name").stringToSlug({
+			getPut : "#slug"
+		});
+	});
+    /* Table initialisation */
+    oTable = null;
+    $(document).ready(function() {
+        oTable = $('#customerDataTable').dataTable({
+            "bAutoWidth": false,
+            "bProcessing": true,
+            "bServerSide": true,
+            "stateSave": true,
+            "aoColumns": [
+                <?php echo $editAction; ?>
+            ],
+            "sAjaxSource": "<?php echo $this->url('admin-category', array('action' => 'index')); ?>",
+            "fnServerData": function(sSource, aoData, fnCallback) {
+                $.ajax({
+                    "dataType": 'json',
+                    "type": "POST",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+                });
+            }
+        });
+    });
+    
+    function deleteCategory(id){
+        if(confirm('Are you sure want to delete this category?')){
+            $.blockUI();
+            $.post("<?php echo $this->url('admin-category', array('action' => 'delete')); ?>", {categoryId: id},
+            function(data) {
+                oTable.fnDraw();
+                $.unblockUI();
+            });
+            afterCallback();
+        }
+    }
+    
+    function changeStatus(catId,catStatus){
+        $.blockUI();
+        $.post("<?php echo $this->url('admin-category', array('action' => 'change-status')); ?>", {id: catId, status : catStatus},
+        function(data) {
+            oTable.fnDraw();
+            $.unblockUI();
+        });
+        afterCallback();
+    }
+
+    function validateNow() {
+        flag = deforayValidator.init({
+            formId: 'categoryInformation'
+        });
+        if (flag) {
+            if (duplicateName) {
+                $.blockUI();
+                document.getElementById('categoryInformation').submit();
+            }
+        }
+    }
+
+    function checkNameValidation(tableName, fieldName, obj, fnct, msg) {
+        checkValue = document.getElementById(obj.id).value;
+        if ($.trim(checkValue) != '') {
+            $.post("<?php echo $this->url('common', array('action' => 'index')); ?>", {
+                tableName: tableName,
+                fieldName: fieldName,
+                value: checkValue,
+                fnct: fnct
+            },
+            function(data) {
+                if (data > 0) {
+                    alert(msg,'err');
+                    duplicateName = false;
+                    document.getElementById(obj.id).value = "";
+                } else {
+                    duplicateName = true;
+                }
+            });
+        }
+    }
+
+    function showAddForm(obj,btn){
+        if(btn == 'add-btn'){
+            $(obj).hide(500);
+            $('.show-form').show(500);
+        }else{
+            $('.show-form').hide(500);
+            $('.add-btn').show(500);
+        }
+    }
+</script>

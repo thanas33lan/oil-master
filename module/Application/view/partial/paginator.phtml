@@ -1,0 +1,50 @@
+<?php if ($this->pageCount): ?>
+     <div>
+         <ul class="pagination pull-right">
+             <!-- Previous page link -->
+             <?php if (isset($this->previous)): ?>
+                 <li>
+                     <a href="javascript:void(0);" onclick="pagination(<?php echo $this->previous ?>)">
+                         <<
+                     </a>
+                 </li>
+             <?php else: ?>
+                 <li class="disabled">
+                     <a href="javascript:void(0);">
+                         <<
+                     </a>
+                 </li>
+             <?php endif; ?>
+
+             <!-- Numbered page links -->
+             <?php foreach ($this->pagesInRange as $page): ?>
+                 <?php if ($page != $this->current): ?>
+                     <li>
+                         <a href="javascript:void(0);" onclick="pagination(<?php echo $page ?>)">
+                             <?php echo $page; ?>
+                         </a>
+                     </li>
+                 <?php else: ?>
+                     <li class="active">
+                         <a href="javascript:void(0);"><?php echo $page; ?></a>
+                     </li>
+                 <?php endif; ?>
+             <?php endforeach; ?>
+
+             <!-- Next page link -->
+             <?php if (isset($this->next)): ?>
+                 <li>
+                     <a href="javascript:void(0);" onclick="pagination(<?php echo $this->next ?>)">
+                         >>
+                     </a>
+                 </li>
+             <?php else: ?>
+                 <li class="disabled">
+                     <a href="javascript:void(0);">
+                         >>
+                     </a>
+                 </li>
+             <?php endif; ?>
+         </ul>
+     </div>
+ <?php endif; ?>

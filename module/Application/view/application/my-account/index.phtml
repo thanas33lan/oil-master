@@ -1,0 +1,302 @@
+<?php
+use Zend\Session\Container;
+use Application\Service\CommonService;
+
+$common = new CommonService();
+$bsUserLogincontainer = new Container('bsUserLoginContainer');
+?>
+
+<style type="text/css">
+
+div.table-title {
+  display: block;
+  margin: auto;
+  max-width: 600px;
+  padding:5px;
+  width: 100%;
+}
+
+.table-title h3 {
+   color: #fafafa;
+   font-size: 30px;
+   font-weight: 400;
+   font-style:normal;
+   font-family: "Roboto", helvetica, arial, sans-serif;
+   text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+   text-transform:uppercase;
+}
+
+
+/*** Table Styles **/
+.table-fill:hover{
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    border-style: groove;
+}
+.table-fill {
+    border-style: groove;
+    border-color: #EAEAEA;
+    border-width: 1px;
+    margin-top: 30px !important;
+    /* background: white; */
+    border-radius:3px;
+    border-collapse: collapse;
+    height: 320px;
+    margin: auto;
+    padding:5px;
+    width: 100%;
+    animation: float 5s infinite;
+}
+ 
+th {
+    color: #343a45;
+    background: #F1F1F1;
+    border-bottom: 1px solid #e34735;
+    font-size: 23px;
+    font-weight: 100;
+    padding: 24px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+th:first-child {
+  border-top-left-radius:3px;
+}
+ 
+th:last-child {
+  border-top-right-radius:3px;
+  border-right:none;
+}
+  
+tr {
+  border-top: 1px solid #C1C3D1;
+  border-bottom-: 1px solid #C1C3D1;
+  color:#666B85;
+  font-size:16px;
+  font-weight:normal;
+  text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
+}
+
+tr:first-child {
+  border-top:none;
+}
+
+tr:last-child {
+  border-bottom:none;
+}
+ 
+tr:nth-child(odd) td {
+  background:#EBEBEB;
+}
+ 
+tr:last-child td:first-child {
+  border-bottom-left-radius:3px;
+}
+ 
+tr:last-child td:last-child {
+  border-bottom-right-radius:3px;
+}
+ 
+td {
+    padding: 20px;
+    vertical-align: middle;
+    font-weight: 300;
+    font-size: 18px;
+    border-right: 1px solid #C1C3D1;
+}
+
+td:last-child {
+  border-right: 0px;
+}
+
+th.text-left {
+  text-align: left;
+}
+
+th.text-center {
+  text-align: center;
+}
+
+th.text-right {
+  text-align: right;
+}
+
+td.text-left {
+  text-align: left;
+}
+
+td.text-center {
+  text-align: center;
+}
+
+td.text-right {
+  text-align: right;
+}
+td.text-left.titile {
+    width: 25%;
+    text-transform: capitalize;
+    font-weight: 600;
+}
+.certificate{
+    padding:20px;
+    border: 2px solid #DCDCDC;
+    background: #F1F1F1;
+    margin-bottom: 10px;
+}
+.form-group {
+    margin-bottom: 0px !important;
+}
+</style>
+<!-- TITLE BAR
+	============================================= -->
+<div class="b-titlebar content" style="padding-top:0px;padding-bottom:0px;border-bottom:1px solid #E4E4E4;">
+    <div class="container layout"  style="padding-top:0px;padding-bottom:0px;">
+        <!-- Title -->
+        <h1>Profile</h1>
+    </div>
+</div>
+<!-- END TITLE BAR
+============================================= -->
+<div class="container layout" >
+	<?php
+		echo $this->partial('partial/biosafety');
+	?>
+    <div class="certificate">
+		<form role="form" class="form-horizontal" name="profileUserForm" id="profileUserForm"  method="post" action="<?php echo $this->url('my-account', array('action' => 'index')); ?>" autocomplete="off">
+			<table  class="table-fill">
+                <thead>
+                    <tr>
+                        <th colspan="2">
+							Edit Profile
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="table-hover">
+                    <tr>
+                        <td class="text-left titile">
+							<label for="full-name" class="control-label">Full Name<span class="mandatory">*</span></label>
+                        </td>
+                        <td class="text-left ">
+                            <div class="form-group">
+                                <input type="text" value="<?php echo $bioSafetyResult['full_name'];?>" name="fullName" id="fullName" class="form-control isRequired" placeholder="Full Name" title="Please enter your full name">
+                            </div>
+                        </td>
+                    <tr>
+                        <td class="text-left titile">
+							<label for="email-address" class="control-label">Email Address<span class="mandatory">*</span></label>
+                        </td>
+                        <td class="text-left">
+                            <div class="form-group">
+                                <input type="text" value="<?php echo $bioSafetyResult['email_id'];?>" name="emailAddress" id="emailAddress" class="form-control isEmail isRequired" placeholder="Email Address" title="Please enter your email address">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-left titile">
+							<label for="password" class="control-label">Password<span class="mandatory">*</span></label>
+                        </td>
+                        <td class="text-left">
+                            <div class="form-group">
+                                <input type="password" value="<?php echo $bioSafetyResult['password'];?>" name="password" id="password" class="form-control isRequired" placeholder="Password" title="Please enter password">
+                            </div>
+                        </td>
+                    </tr>
+					<tr>
+                        <td class="text-left titile">
+							<label for="confirm-password" class="control-label">Confirm Password<span class="mandatory">*</span></label>
+                        </td>
+                        <td class="text-left">
+                            <div class="form-group">
+                                <input onchange="confirmUserPassword();" type="password" value="<?php echo $bioSafetyResult['password'];?>" name="confirmPassword" id="confirmPassword" class="form-control isRequired" placeholder="Confirm Password" title="Please enter Confirm password">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-left titile">
+                            Phone/Mobile Number
+                        </td>
+                        <td class="text-left">
+                            <div class="form-group">
+                                <input type="text" value="<?php echo $bioSafetyResult['mobile'];?>" name="phoneNo" id="phoneNo" class="form-control isNumeric" placeholder="Phone/Mobile Number" title="Please enter your phone/mobile number">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-left titile">
+                            Organization Name
+                        </td>
+                        <td class="text-left">
+                            <div class="form-group">
+                                <input type="text" value="<?php echo $bioSafetyResult['organization'];?>" name="organizationName" id="organizationName" class="form-control" placeholder="Organization Name" title="Please enter your organization name">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-left titile">
+						<label for="select-current-job" class="control-label">Select Current Job<span class="mandatory">*</span></label>
+                        </td>
+                        <td class="text-left">
+                            <div class="form-group">
+                                <select style=" height: 45px; " name="job" id="job" class="form-control isRequired" title="Please select your Job">
+                                    <option value="">--Select Job--</option>
+                                    <?php foreach($rbpJobDetails as $rbpJob){ ?>
+                                        <option value="<?php echo $rbpJob['rbp_id']; ?>" <?php echo(($bioSafetyResult['rbp_job_id'] == $rbpJob['rbp_id']) ? "selected='selected'" : ""); ?>> <?php echo ucwords($rbpJob['rbp_job']); ?> </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-left titile">
+							<label for="" class="control-label">Select Country</label>
+                        </td>
+                        <td class="text-left">
+                            <div class="form-group">
+                                <select style=" height: 45px;" name="country" id="country" class="form-control" title="Please select your country">
+                                    <option value=""> -- Select Country -- </option>
+                                    <?php foreach($countryResult as $country){ ?>
+                                        <option value="<?php echo $country['country_id']; ?>" <?php echo(($bioSafetyResult['country'] == $country['country_id']) ? "selected='selected'" : ""); ?>> <?php echo ucwords($country['country_name']); ?> </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+					<tr>
+                        <td class="text-left titile" colspan="2">
+							<div>
+								<input type="button" style=" margin:auto;display: block; " class="btn btn-large btn colored" value="Update profile" onclick="validateProfileForm();">
+							</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+		</form>
+    </div>
+</div>
+<script type="text/javascript" src="/assets/js/deforayValidation.js"></script>
+<script type="text/javascript">
+// duplicateName = true;
+	function validateProfileForm() {
+
+		flag = deforayValidator.init({
+			formId: 'profileUserForm'
+		});
+		if (flag) {
+			// if (duplicateName) {
+				// $.blockUI();
+				document.getElementById('profileUserForm').submit();
+			// }
+		}
+	}
+
+	function confirmUserPassword(){
+		var password = $('#password').val();
+		var confirmPassword = $('#confirmPassword').val()
+		if( password != confirmPassword ){
+
+			alert("Password not matched");
+			$('#confirmPassword').val('');
+			$('#confirmPassword').focus();	
+		}
+	}
+	
+</script>

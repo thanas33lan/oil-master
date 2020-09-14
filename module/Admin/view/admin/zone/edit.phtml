@@ -1,0 +1,130 @@
+<?php
+    use Zend\Session\Container;
+    $sessionLogin = new Container('credo');
+?>
+<div class="bg-body-light">
+    <div class="content content-full">
+        <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+            <h1 class="flex-sm-fill font-size-h2 font-w400 mt-2 mb-0 mb-sm-2">Zone</h1>
+            <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <a href="<?php echo $this->url('admin-zone', array('action' => 'index')); ?>">
+                        <li class="breadcrumb-item">Zone</li>
+                    </a>
+                    <li class="breadcrumb-item active" aria-current="page">&nbsp;/ Modify</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+
+<div class="content">
+    <div class="content">
+        <div class="block block-rounded block-bordered">
+            <div class="block-header block-header-default">
+                <h3 class="block-title">Modify Zone Details</h3>
+            </div>
+            <div class="block-content">
+                <form name="zoneInformation" id="zoneInformation" class="mb-5" action="<?php echo $this->url('admin-zone', array('action' => 'edit')); ?>" method="post">
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label" for="name">Name<span class="mandatory">*</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" value="<?php echo $result['name'];?>" class="form-control isRequired" id="name" name="name" placeholder="Enter the name" title="Please enter the name" onblur="checkNameValidation('Zone', 'name', this, '<?php echo "id##" . $result['id']; ?>', 'Entered name id exist . Please enter an another name.')">
+                        </div>
+                        <label class="col-sm-2 col-form-label" for="slug">Slug<span class="mandatory">*</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" value="<?php echo $result['slug'];?>" class="form-control isRequired" id="slug" name="slug" placeholder="Enter the slug" title="Please enter the slug" onblur="checkNameValidation('Zone', 'slug', this, '<?php echo "id##" . $result['id']; ?>', 'Entered slug id exist . Please enter an another slug.')">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label" for="description">Description</label>
+                        <div class="col-sm-4">
+                            <textarea type="text" class="form-control" id="description" name="description" placeholder="Enter the description" title="Please enter the description"><?php echo $result['description'];?></textarea>
+                        </div>
+                        <label class="col-sm-2 col-form-label" for="parentId">Parent Zone</label>
+                        <div class="col-sm-4">
+                            <select class="form-control selectpicker isBootstrapSelect" data-selected-text-format="count > 3" data-live-search="true" data-container="body" data-actions-box="true"  id="parentId" name="parentId" title="Select the parent Zone">
+                                <?php if(isset($zonelist) && count($zonelist) > 0){
+                                    foreach($zonelist as $zone){
+                                        $selected = (isset($result['parent_zone']) && $result['parent_zone'] == $zone['id'])?"selected='selected'":'';
+                                        echo '<option value="'.base64_encode($zone['id']).'" '.$selected.'>'.$zone['name'].'</option>';
+                                    }
+                                }?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label" for="status">Status<span class="mandatory">*</span></label>
+                        <div class="col-sm-4">
+                            <select class="form-control isRequired" id="status" name="status" title="Please select the Zone status">
+                                <option value="active" <?php echo (isset($result['status']) && $result['status'] == 'active')?"selected='selected'":'';?>>Active</option>
+                                <option value="inactive" <?php echo (isset($result['status']) && $result['status'] == 'inactive')?"selected='selected'":'';?>>Inactive</option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 col-form-label" for="userId">Employees<span class="mandatory">*</span></label>
+                        <div class="col-sm-4">
+                            <select class="form-control selectpicker isRequired isBootstrapSelect" multiple data-selected-text-format="count > 3" data-live-search="true" data-container="body" data-actions-box="true" id="userId" name="userId[]" title="Select the multiple employee">
+                                <?php if(isset($userlist) && count($userlist) > 0){
+                                    foreach($userlist as $user){
+                                        $selected = (isset($result['map']) && count($result['map']) > 0 && in_array($user['user_id'],$result['map']))?"selected='selected'":'';
+                                        echo '<option value="'.base64_encode($user['user_id']).'" '.$selected.'>'.ucwords($user['user_name']).'</option>';
+                                    }
+                                }?>
+                            </select>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row items-push submit">
+                        <div class="col-lg-7 offset-lg-4">
+                            <input type="hidden" id="zoneId" name="zoneId" value="<?php echo base64_encode($result['id']);?>"/>
+                            <a href="<?php echo $this->url('admin-zone', array('action' => 'index')); ?>" class="btn btn-hero-dark">Cancel</a>&nbsp;
+                            <button type="submit" class="btn btn-hero-primary" onclick="validateNow();return false;"><i class="fa fa-fw fa-check"></i> Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    duplicateName = true;
+    $(document).ready(function(){
+		$("#name").stringToSlug({
+			getPut : "#slug"
+		});
+	});
+    function validateNow() {
+        flag = deforayValidator.init({
+            formId: 'zoneInformation'
+        });
+        if (flag) {
+            if (duplicateName) {
+                $.blockUI();
+                document.getElementById('zoneInformation').submit();
+            }
+        }
+    }
+
+    function checkNameValidation(tableName, fieldName, obj, fnct, msg) {
+        checkValue = document.getElementById(obj.id).value;
+        if ($.trim(checkValue) != '') {
+            $.post("<?php echo $this->url('common', array('action' => 'index')); ?>", {
+                tableName: tableName,
+                fieldName: fieldName,
+                value: checkValue,
+                fnct: fnct
+            },
+            function(data) {
+                if (data > 0) {
+                    alert(msg,'err');
+                    duplicateName = false;
+                    document.getElementById(obj.id).value = "";
+                } else {
+                    duplicateName = true;
+                }
+            });
+        }
+    }
+</script>

@@ -1,0 +1,183 @@
+<?php
+    use Zend\Session\Container;
+    $sessionLogin = new Container('user');
+    $customerId = $customerResult['customer_id'];
+?>
+<div class="bg-body-light">
+    <div class="content content-full">
+        <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+            <h1 class="flex-sm-fill font-size-h2 font-w400 mt-2 mb-0 mb-sm-2">Customer</h1>
+            <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <a href="<?php echo $this->url('admin-customer', array('action' => 'index')); ?>">
+                        <li class="breadcrumb-item">Customer Details</li>
+                    </a>
+                    <li class="breadcrumb-item active" aria-current="page">&nbsp;/ Edit</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+
+<div class="content">
+    <div class="block block-rounded block-bordered">
+        <div class="block-header block-header-default">
+            <h3 class="block-title">Edit Customer Details</h3>
+        </div>
+        <div class="block-content">
+            <form name="customerInformation" id="customerInformation" class="mb-5" action="<?php echo $this->url('admin-customer', array('action' => 'edit')); ?>" method="post">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="serialNo">Serial number<span class="mandatory">*</span></label>
+                    <div class="col-sm-4">
+                        <input type="text" value="<?php echo $customerResult['serial_no'];?>" class="form-control isRequired" id="serialNo" name="serialNo" placeholder="Enter the serial number" title="Please enter the serial number" readonly>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="firstName">First name<span class="mandatory">*</span></label>
+                    <div class="col-sm-4">
+                        <input type="text" value="<?php echo $customerResult['first_name'];?>" class="form-control isRequired" id="firstName" name="firstName" placeholder="Enter the first name" title="Please enter the first name">
+                        <input type="hidden" id="customerId" name="customerId" value="<?php echo base64_encode($customerId);?>">
+                    </div>
+                    <label class="col-sm-2 col-form-label" for="lastName">Last name</label>
+                    <div class="col-sm-4">
+                        <input type="text" value="<?php echo $customerResult['last_name'];?>" class="form-control" id="lastName" name="lastName" placeholder="Enter the last name" title="Please enter the last name"/>
+                    </div>
+
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="email">Email</label>
+                    <div class="col-sm-4">
+                        <input type="email" value="<?php echo $customerResult['email'];?>" class="form-control isEmail" id="email" name="email" placeholder="Enter the email" title="Please enter the valid email" onblur="checkNameValidation('customer', 'email', this, '<?php echo "customer_id##" . $customerId; ?>', 'Entered email id exist . Please enter an another email id.')">
+                    </div>
+                    <label class="col-sm-2 col-form-label" for="gender">Gender</label>
+                    <div class="col-sm-4" style=" display: inline-flex; ">
+                        <div class="custom-control custom-radio custom-control-primary mb-1" style="padding-right: 20px;">
+                            <input type="radio" class="custom-control-input" id="male" value="male" name="gender" checked title="Please select the gender" <?php echo ($customerResult['gender'] == 'male')?'checked':'';?>>
+                            <label class="custom-control-label" for="male">Male</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-primary mb-1">
+                            <input type="radio" class="custom-control-input" id="female" value="female" name="gender" title="Please select the gender" <?php echo ($customerResult['gender'] == 'female')?'checked':'';?>>
+                            <label class="custom-control-label" for="female">Female</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="mobileNumber">Mobile No<span class="mandatory">*</span></label>
+                    <div class="col-sm-4">
+                        <input type="number" value="<?php echo $customerResult['phone'];?>" class="form-control isMobile isRequired" id="mobileNumber" name="mobileNumber" placeholder="Enter the mobile" title="Please enter the 10 digit valid mobile" onblur="checkNameValidation('customer', 'phone', this, '<?php echo "customer_id##" . $customerId; ?>', 'Entered phone no exist . Please enter an another phone no.')">
+                    </div>
+                    <label class="col-sm-2 col-form-label" for="alternateNumber">Alternate Mobile No</label>
+                    <div class="col-sm-4">
+                        <input type="number" value="<?php echo $customerResult['alternate_phone'];?>" class="form-control isMobile" id="alternateNumber" name="alternateNumber" placeholder="Enter the alternate mobile" title="Please enter the valid 10 digit alternate mobile no">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="receiverName">Receiver Name</label>
+                    <div class="col-sm-4">
+                        <input type="text" value="<?php echo $customerResult['recceiver_name'];?>" class="form-control" id="receiverName" name="receiverName" placeholder="Enter the receiver name" title="Please enter the receiver name">
+                    </div>
+                    
+                    <label class="col-sm-2 col-form-label" for="address">Street Address</label>
+                    <div class="col-sm-4">
+                        <input type="text" value="<?php echo $customerResult['street_address'];?>" class="form-control" id="address" name="address" placeholder="Enter the street address" title="Please enter the street address">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="address2">Address Line 2</label>
+                    <div class="col-sm-4">
+                        <input type="text" value="<?php echo $customerResult['address_line2'];?>" class="form-control" id="address2" name="address2" placeholder="Enter the address line 2" title="Please enter the address line 2">
+                    </div>
+                    <label class="col-sm-2 col-form-label" for="city">City</label>
+                    <div class="col-sm-4">
+                        <input type="text" value="<?php echo $customerResult['city'];?>" class="form-control isChar" id="city" name="city" placeholder="Enter the city" title="Please enter the city">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="state">State</label>
+                    <div class="col-sm-4">
+                        <select class="form-control selectpicker isBootstrapSelect" data-selected-text-format="count > 3" data-live-search="true" data-container="body" data-actions-box="true" id="state" name="state" data-placeholder="Choose one state.." title="Please select the state">
+                            <?php foreach($stateResult as $state){ ?>
+                            <option value="<?php echo base64_encode($state['state_id']);?>" <?php echo ($customerResult['state'] == $state['state_id'])?'selected="selected"':'';?>><?php echo ucwords($state['state_name']);?></option>
+                            <?php }?>
+                        </select>
+                    </div>
+                    <label class="col-sm-2 col-form-label" for="pincode">Pincode</label>
+                    <div class="col-sm-4">
+                        <input type="text" value="<?php echo $customerResult['pincode'];?>" class="form-control isPincode" id="pincode" name="pincode" placeholder="Enter the valid 6 digit pincode" title="Please enter the valid 6 digit pincode">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="customerStatus">Status<span class="mandatory">*</span></label>
+                    <div class="col-sm-4">
+                        <select class="form-control isRequired" id="customerStatus" name="customerStatus" title="Please select the customer status">
+                            <option value="">--Select--</option>
+                            <option value="active" <?php echo ($customerResult['customer_status'] == 'active')?'selected="selected"':'';?>>Active</option>
+                            <option value="inactive" <?php echo ($customerResult['customer_status'] == 'inactive')?'selected="selected"':'';?>>Inactive</option>
+                        </select>
+                    </div>
+                    <label class="col-sm-2 col-form-label" for="zoneId">Zone</label>
+                    <div class="col-sm-4">
+                        <select class="form-control selectpicker isBootstrapSelect" multiple data-selected-text-format="count > 3" data-live-search="true" data-container="body" data-actions-box="true" id="zoneId" name="zoneId[]" title="Please select the zone">
+                            <?php if(isset($zoneList) && count($zoneList) > 0){
+                                foreach($zoneList as $zone){
+                                    $selected = (isset($customerResult['map']) && count($customerResult['map']) > 0 && in_array($zone['id'],$customerResult['map']))?"selected='selected'":'';
+                                    echo '<option value="'.base64_encode($zone['id']).'" '.$selected.'>'.ucwords($zone['name']).'</option>';
+                                }
+                            }?>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="row items-push submit">
+                    <div class="col-lg-7 offset-lg-4">
+                        <input type="hidden" name="deleteSubCustomer" id="deleteSubCustomer"/>
+                        <a href="<?php echo $this->url('admin-customer', array('action' => 'index')); ?>" class="btn btn-hero-dark">Cancel</a>&nbsp;
+                        <button type="submit" class="btn btn-hero-primary" onclick="validateNow();return false;"><i class="fa fa-fw fa-check"></i> Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    duplicateName = true;
+    subCustomerIdArr = [];
+    rowCount = document.getElementById("subscriberTable").rows.length;
+    function validateNow() {
+        flag = deforayValidator.init({
+            formId: 'customerInformation'
+        });
+        if (flag) {
+            if (duplicateName) {
+                $.blockUI();
+                document.getElementById('customerInformation').submit();
+            }
+        }
+    }
+
+    function checkNameValidation(tableName, fieldName, obj, fnct, msg) {
+        checkValue = document.getElementById(obj.id).value;
+        if ($.trim(checkValue) != '') {
+            $.post("<?php echo $this->url('common', array('action' => 'index')); ?>", {
+                tableName: tableName,
+                fieldName: fieldName,
+                value: checkValue,
+                fnct: fnct
+            },
+            function(data) {
+                if (data > 0) {
+                    alert(msg,'err');
+                    duplicateName = false;
+                    document.getElementById(obj.id).value = "";
+                } else {
+                    duplicateName = true;
+                }
+            });
+        }
+    }
+</script>
