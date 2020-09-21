@@ -130,7 +130,7 @@ class QtyDetailsTable extends AbstractTableGateway {
         }
 
         $sQueryStr = $sql->getSqlStringForSqlObject($sQuery);
-        die($sQueryStr);
+        // die($sQueryStr);
         $rResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
         /* Data set length after filtering */
         $sQuery->reset('limit');

@@ -25,7 +25,7 @@ class ProductTable extends AbstractTableGateway {
         $common = new CommonService();
         $sessionLogin = new Container('user');
         $data = array(
-            'category_id'   => $params['categoryId'],
+            'category_id'   => base64_decode($params['categoryId']),
             'name'          => $params['name'],
             'slug'          => $params['slug'],
             'description'   => $params['description'],
@@ -46,31 +46,24 @@ class ProductTable extends AbstractTableGateway {
             $data['modified_by'] = $sessionLogin->userId;
             $lastInsertId = base64_decode($params['productId']);
             $this->update($data,array('id' => $lastInsertId));
-
-            if(!empty($params['productQtyMap'])){
-                $productQtyMapDb->delete(array('product_id' => $lastInsertId));
-                foreach($params['productQtyMap'] as $mapId){
-                    $productQtyMapDb->insert(array(
-                        'product_id'=> $lastInsertId,
-                        'qty_id'    => $mapId
-                    ));
-                }
-            }
+            /* Delete mapping if already exist */
+            $productQtyMapDb->delete(array('product_id' => $lastInsertId));
         }else{
             $data['created_on'] = $common->getDateTime();
             $data['created_by'] = $sessionLogin->userId;
             $this->insert($data);
             $lastInsertId = $this->lastInsertValue;
 
-            if(!empty($params['productQtyMap'])){
-                foreach($params['productQtyMap'] as $mapId){
-                    $productQtyMapDb->insert(array(
-                        'product_id'=> $lastInsertId,
-                        'qty_id'    => $mapId
-                    ));
-                }
+        }
+        if(!empty($params['productQtyMap'])){
+            foreach($params['productQtyMap'] as $mapId){
+                $productQtyMapDb->insert(array(
+                    'product_id'=> $lastInsertId,
+                    'qty_id'    => base64_decode($mapId)
+                ));
             }
         }
+        // \Zend\Debug\Debug::dump($lastInsertId);die;
 
         if(isset($_FILES['image']['name']) && trim($_FILES['image']['name'])!=''){
             if (!file_exists(UPLOAD_PATH . DIRECTORY_SEPARATOR . "Product") && !is_dir(UPLOAD_PATH . DIRECTORY_SEPARATOR . "Product")) {
@@ -274,15 +267,15 @@ class ProductTable extends AbstractTableGateway {
             $sQuery = $sQuery->where(array('upm.user_id' => $sessionLogin->userId));
         }
         $sQueryStr = $sql->getSqlStringForSqlObject($sQuery);
-        $productList = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
-        foreach($productList as $key=>$aRow){
-            $qQuery = $sql->select()->from(array('pqm' => 'product_qty_map'))->columns(array('pqm.product_id'))
-            ->join(array('q' => 'qty_details'),'pqm.qty_id=q.qty_id',array('qty_id','qty_name','qty_status'))
-            ->where(array('qty_status' => 'active'));
-            $qQueryStr = $sql->getSqlStringForSqlObject($qQuery);
-            $qtyList = $dbAdapter->query($qQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
-            $productList[$key]['qtyDetails'] = $qtyList;
-        }
+        $productList = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+        /* To get qty details */
+        $qQuery = $sql->select()->from(array('pqm' => 'product_qty_map'))->columns(array('product_id'))
+        ->join(array('q' => 'qty_details'),'pqm.qty_id=q.qty_id',array('qty_id','qty_name','qty_status'))
+        ->where(array('qty_status' => 'active', 'pqm.product_id' => $id));
+        $qQueryStr = $sql->getSqlStringForSqlObject($qQuery);
+        $qtyList = $dbAdapter->query($qQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+        $productList['qtyDetails'] = $qtyList;
+        
         return $productList;
     }
 }

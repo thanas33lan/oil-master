@@ -93,9 +93,9 @@ table.dataTable tr th.select-checkbox.selected::after {
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label" for="parentId">Category<span class="mandatory">*</span></label>
+                    <label class="col-sm-2 col-form-label" for="categoryId">Category<span class="mandatory">*</span></label>
                     <div class="col-sm-4">
-                        <select class="form-control selectpicker isBootstrapSelect isRequired" data-selected-text-format="count > 3" data-live-search="true" data-container="body" data-actions-box="true" id="parentId" name="parentId" data-placeholder="Choose one parent category ..." title="Please select the parent category">
+                        <select class="form-control selectpicker isBootstrapSelect isRequired" data-selected-text-format="count > 3" data-live-search="true" data-container="body" data-actions-box="true" id="categoryId" name="categoryId" data-placeholder="Choose one category ..." title="Please select the category">
                             <?php if(isset($categorylist) && count($categorylist) > 0){
                                 foreach($categorylist as $category){
                                     echo '<option value="'.base64_encode($category['category_id']).'">'.$category['category_name'].'</option>';
@@ -175,6 +175,16 @@ table.dataTable tr th.select-checkbox.selected::after {
                     </div>
                 </div>
                 <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="productQtyMap">Qty's<span class="mandatory">*</span></label>
+                    <div class="col-sm-4">
+                        <select class="form-control isRequired selectpicker isBootstrapSelect" multiple data-selected-text-format="count > 3" data-live-search="true" data-container="body" data-actions-box="true" id="productQtyMap" name="productQtyMap[]" title="Select the multiple qty's">
+                            <?php if(isset($qtylist) && count($qtylist) > 0){
+                                foreach($qtylist as $qty){
+                                    echo '<option value="'.base64_encode($qty['qty_id']).'">'.ucwords($qty['qty_name']).'</option>';
+                                }
+                            }?>
+                        </select>
+                    </div>
                     <label class="col-sm-2 col-form-label" for="status">Status<span class="mandatory">*</span></label>
                     <div class="col-sm-4">
                         <select class="form-control isRequired" id="status" name="status" title="Please select the Zone status">

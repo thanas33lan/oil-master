@@ -12,6 +12,7 @@ class ProductController extends AbstractActionController
     {
         $productService = $this->getServiceLocator()->get('ProductService');
         $categoryService = $this->getServiceLocator()->get('CategoryService');
+        $qtyService = $this->getServiceLocator()->get('QtyService');
         $request = $this->getRequest();
         if ($request->isPost()) {
             $parameters = $request->getPost();
@@ -19,7 +20,8 @@ class ProductController extends AbstractActionController
             return $this->getResponse()->setContent(Json::encode($result));
         } else{
             return new ViewModel(array(
-                'categorylist' => $categoryService->getAllActiveCategory()
+                'categorylist' => $categoryService->getAllActiveCategory(),
+                'qtylist' => $qtyService->getAllActiveQty()
             ));
         }
     }
@@ -28,13 +30,15 @@ class ProductController extends AbstractActionController
     {
         $productService = $this->getServiceLocator()->get('ProductService');
         $categoryService = $this->getServiceLocator()->get('CategoryService');
+        $qtyService = $this->getServiceLocator()->get('QtyService');
         if ($this->getRequest()->isPost()) {
             $params = $this->getRequest()->getPost();
             $productService->saveProductData($params);
             return $this->_redirect()->toRoute('admin-product');
         } else{
             return new ViewModel(array(
-                'categorylist' => $categoryService->getAllActiveCategory()
+                'categorylist' => $categoryService->getAllActiveCategory(),
+                'qtylist' => $qtyService->getAllActiveQty()
             ));
         }
     }
@@ -43,6 +47,7 @@ class ProductController extends AbstractActionController
     {
         $productService = $this->getServiceLocator()->get('ProductService');
         $categoryService = $this->getServiceLocator()->get('CategoryService');
+        $qtyService = $this->getServiceLocator()->get('QtyService');
         if ($this->getRequest()->isPost()) {
             $params = $this->getRequest()->getPost();
             $productService->saveProductData($params);
@@ -51,6 +56,7 @@ class ProductController extends AbstractActionController
             $productId = base64_decode($this->params()->fromRoute('id'));
             return new ViewModel(array(
                 'categorylist' => $categoryService->getAllActiveCategory(),
+                'qtylist' => $qtyService->getAllActiveQty(),
                 'result' => $productService->getProductById($productId)
             ));
         }
