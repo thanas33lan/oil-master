@@ -100,6 +100,16 @@ return array(
                     ),
                 ),
             ),
+            'admin-purchase' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/admin/purchase[/:action][/][:id]',
+                    'defaults' => array(
+                        'controller' => 'Admin\Controller\Purchase',
+                        'action' => 'index',
+                    ),
+                ),
+            ),
         ),
     ),
     'service_manager' => array(
@@ -132,6 +142,7 @@ return array(
             'Admin\Controller\Zone'         => 'Admin\Controller\ZoneController',
             'Admin\Controller\Product'      => 'Admin\Controller\ProductController',
             'Admin\Controller\QtyDetails'   => 'Admin\Controller\QtyDetailsController',
+            'Admin\Controller\Purchase'     => 'Admin\Controller\PurchaseController',
         ),
     ),
     'view_manager' => array(

@@ -17,6 +17,7 @@ use Application\Model\ProductQtyMapTable;
 use Application\Model\QtyTable;
 use Application\Model\UserProductMapTable;
 use Application\Model\QtyDetailsTable;
+use Application\Model\PurchaseTable;
 
 use Application\Service\CommonService;
 use Application\Service\RoleService;
@@ -26,6 +27,7 @@ use Application\Service\CategoryService;
 use Application\Service\ZoneService;
 use Application\Service\ProductService;
 use Application\Service\QtyService;
+use Application\Service\PurchaseService;
 
 class Module {
 
@@ -122,6 +124,11 @@ class Module {
                     $table = new QtyDetailsTable($dbAdapter);
                     return $table;
                 },
+                'PurchaseTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new PurchaseTable($dbAdapter);
+                    return $table;
+                },
                 
                 'CommonService' => function($sm) {
                     return new CommonService($sm);
@@ -146,6 +153,9 @@ class Module {
                 },
                 'QtyService' => function($sm) {
                     return new QtyService($sm);
+                },
+                'PurchaseService' => function($sm) {
+                    return new PurchaseService($sm);
                 },
             ),
         );

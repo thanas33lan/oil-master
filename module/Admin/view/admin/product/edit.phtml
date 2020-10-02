@@ -1,7 +1,10 @@
 <?php
     use Zend\Session\Container;
     $sessionLogin = new Container('credo');
-    $productId = $result['id'];
+    // \Zend\Debug\Debug::dump($result);die;
+    foreach($result['qtyDetails'] as $qty){
+        $qtyDetails[] = $qty['qty_id'];
+    }
 ?>
 <div class="bg-body-light">
     <div class="content content-full">
@@ -31,11 +34,11 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label" for="name">Name<span class="mandatory">*</span></label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control isRequired" id="name" name="name" placeholder="Enter the name" title="Please enter the name" onblur="checkNameValidation('product', 'name', this, null, 'Entered name id exist . Please enter an another name.')">
+                            <input type="text" value="<?php echo $result['name'];?>" class="form-control isRequired" id="name" name="name" placeholder="Enter the name" title="Please enter the name" onblur="checkNameValidation('product', 'name', this, '<?php echo "id##" . $result['id']; ?>', 'Entered name id exist . Please enter an another name.')">
                         </div>
                         <label class="col-sm-2 col-form-label" for="slug">Slug<span class="mandatory">*</span></label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control isRequired" id="slug" name="slug" placeholder="Enter the slug" title="Please enter the slug" onblur="checkNameValidation('product', 'slug', this, null, 'Entered slug id exist . Please enter an another slug.')">
+                            <input type="text" value="<?php echo $result['slug'];?>" class="form-control isRequired" id="slug" name="slug" placeholder="Enter the slug" title="Please enter the slug" onblur="checkNameValidation('product', 'slug', this, '<?php echo "id##" . $result['id']; ?>', 'Entered slug id exist . Please enter an another slug.')">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -44,25 +47,26 @@
                             <select class="form-control selectpicker isBootstrapSelect isRequired" data-selected-text-format="count > 3" data-live-search="true" data-container="body" data-actions-box="true" id="categoryId" name="categoryId" data-placeholder="Choose one category ..." title="Please select the category">
                                 <?php if(isset($categorylist) && count($categorylist) > 0){
                                     foreach($categorylist as $category){
-                                        echo '<option value="'.base64_encode($category['category_id']).'">'.$category['category_name'].'</option>';
+                                        $selected = (isset($result['category_id']) && $result['category_id'] == $category['category_id'])?"selected='selected'":"";
+                                        echo '<option value="'.base64_encode($category['category_id']).'" '.$selected.'>'.$category['category_name'].'</option>';
                                     }
                                 }?>
                             </select>
                         </div>
                         <label class="col-sm-2 col-form-label" for="description">Description</label>
                         <div class="col-sm-4">
-                            <textarea type="text" class="form-control" id="description" name="description" placeholder="Enter the description" title="Please enter the description"></textarea>
+                            <textarea type="text" class="form-control" id="description" name="description" placeholder="Enter the description" title="Please enter the description"><?php echo $result['description'];?></textarea>
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label" for="hsn">HSN</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" id="hsn" name="hsn" placeholder="Enter the hsn" title="Please enter the hsn" onblur="checkNameValidation('product', 'hsn', this, null, 'Entered hsn was already exist . Please enter an another hsn.')">
+                            <input type="text" value="<?php echo $result['hsn'];?>" class="form-control" id="hsn" name="hsn" placeholder="Enter the hsn" title="Please enter the hsn" onblur="checkNameValidation('product', 'hsn', this, '<?php echo "id##" . $result['id']; ?>', 'Entered hsn was already exist . Please enter an another hsn.')">
                         </div>
                         <label class="col-sm-2 col-form-label" for="name">SKU</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" id="sku" name="sku" placeholder="Enter the sku" title="Please enter the sku" onblur="checkNameValidation('product', 'sku', this, null, 'Entered sku was already exist . Please enter an another sku.')">
+                            <input type="text" value="<?php echo $result['sku'];?>" class="form-control" id="sku" name="sku" placeholder="Enter the sku" title="Please enter the sku" onblur="checkNameValidation('product', 'sku', this, '<?php echo "id##" . $result['id']; ?>', 'Entered sku was already exist . Please enter an another sku.')">
                         </div>
                     </div>
                     <hr>
@@ -71,21 +75,21 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label" for="purchasePrice">Purchase Price</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" id="purchasePrice" name="purchasePrice" placeholder="Enter the purchase price" title="Please enter the purchase price">
+                            <input type="text" value="<?php echo $result['purchase_price'];?>" class="form-control" id="purchasePrice" name="purchasePrice" placeholder="Enter the purchase price" title="Please enter the purchase price">
                         </div>
                         <label class="col-sm-2 col-form-label" for="dealerPrice">Dealer Price</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" id="dealerPrice" name="dealerPrice" placeholder="Enter the dealer price" title="Please enter the dealer price">
+                            <input type="text" value="<?php echo $result['dealer_price'];?>" class="form-control" id="dealerPrice" name="dealerPrice" placeholder="Enter the dealer price" title="Please enter the dealer price">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label" for="mrpPrice">MRP Price</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" id="mrpPrice" name="mrpPrice" placeholder="Enter the mrp price" title="Please enter the mrp price">
+                            <input type="text" value="<?php echo $result['mrp_price'];?>" class="form-control" id="mrpPrice" name="mrpPrice" placeholder="Enter the mrp price" title="Please enter the mrp price">
                         </div>
                         <label class="col-sm-2 col-form-label" for="tax">TAX</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" id="tax" name="tax" placeholder="Enter the tax" title="Please enter the tax">
+                            <input type="text" value="<?php echo $result['tax'];?>" class="form-control" id="tax" name="tax" placeholder="Enter the tax" title="Please enter the tax">
                         </div>
                     </div>
                     <hr>
@@ -94,14 +98,15 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label" for="optColour">Colour</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" id="optColour" name="optColour" placeholder="Enter the colour of the product" title="Please enter the colour of the product">
+                            <input type="text" value="<?php echo $result['option_colour'];?>" class="form-control" id="optColour" name="optColour" placeholder="Enter the colour of the product" title="Please enter the colour of the product">
                         </div>
                         <label class="col-sm-2 col-form-label" for="optGrade">Grade<span class="mandatory">*</span></label>
                         <div class="col-sm-4">
                             <select class="form-control isRequired" id="optGrade" name="optGrade" title="Please select the grade">
-                                <option value="sn">SN</option>
-                                <option value="sm">SM</option>
-                                <option value="sl">SL</option>
+                                <option value="">--Select--</option>
+                                <option value="sn" <?php echo (isset($result['option_grade']) && $result['option_grade'] == 'sn')?"selected='selected'":"";?>>SN</option>
+                                <option value="sm" <?php echo (isset($result['option_grade']) && $result['option_grade'] == 'sm')?"selected='selected'":"";?>>SM</option>
+                                <option value="sl" <?php echo (isset($result['option_grade']) && $result['option_grade'] == 'sl')?"selected='selected'":"";?>>SL</option>
                             </select>
                         </div>
                     </div>
@@ -109,15 +114,16 @@
                         <label class="col-sm-2 col-form-label" for="optType">Type<span class="mandatory">*</span></label>
                         <div class="col-sm-4">
                             <select class="form-control isRequired" id="optType" name="optType" title="Please select the type of the product">
-                                <option value="two-wheeler">Two Wheeler</option>
-                                <option value="three-wheeler">Three Wheeler</option>
-                                <option value="four-wheeler">Four Wheeler</option>
-                                <option value="heavy-transport">Heavy Transport</option>
+                                <option value="">--Select--</option>
+                                <option value="two-wheeler" <?php echo (isset($result['option_type']) && $result['option_type'] == 'two-wheeler')?"selected='selected'":"";?>>Two Wheeler</option>
+                                <option value="three-wheeler" <?php echo (isset($result['option_type']) && $result['option_type'] == 'three-wheeler')?"selected='selected'":"";?>>Three Wheeler</option>
+                                <option value="four-wheeler" <?php echo (isset($result['option_type']) && $result['option_type'] == 'four-wheeler')?"selected='selected'":"";?>>Four Wheeler</option>
+                                <option value="heavy-transport" <?php echo (isset($result['option_type']) && $result['option_type'] == 'heavy-transport')?"selected='selected'":"";?>>Heavy Transport</option>
                             </select>
                         </div>
                         <label class="col-sm-2 col-form-label" for="remainderQty">Reminder Quantity</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" id="remainderQty" name="remainderQty" placeholder="Enter the reminder quantity" title="Please enter the reminder quantity">
+                            <input type="text" value="<?php echo $result['remainder_qty'];?>" class="form-control" id="remainderQty" name="remainderQty" placeholder="Enter the reminder quantity" title="Please enter the reminder quantity">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -126,7 +132,8 @@
                             <select class="form-control isRequired selectpicker isBootstrapSelect" multiple data-selected-text-format="count > 3" data-live-search="true" data-container="body" data-actions-box="true" id="productQtyMap" name="productQtyMap[]" title="Select the multiple qty's">
                                 <?php if(isset($qtylist) && count($qtylist) > 0){
                                     foreach($qtylist as $qty){
-                                        echo '<option value="'.base64_encode($qty['qty_id']).'">'.ucwords($qty['qty_name']).'</option>';
+                                        $selected = (in_array($qty['qty_id'], $qtyDetails))?"selected='selected'":"";
+                                        echo '<option value="'.base64_encode($qty['qty_id']).'" '.$selected.'>'.ucwords($qty['qty_name']).'</option>';
                                     }
                                 }?>
                             </select>
@@ -134,8 +141,9 @@
                         <label class="col-sm-2 col-form-label" for="status">Status<span class="mandatory">*</span></label>
                         <div class="col-sm-4">
                             <select class="form-control isRequired" id="status" name="status" title="Please select the Zone status">
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
+                                <option value="">--Select--</option>
+                                <option value="active" <?php echo (isset($result['status']) && $result['status'] == 'active')?"selected='selected'":"";?>>Active</option>
+                                <option value="inactive" <?php echo (isset($result['status']) && $result['status'] == 'inactive')?"selected='selected'":"";?>>Inactive</option>
                             </select>
                         </div>
                     </div>
