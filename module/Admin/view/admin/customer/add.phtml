@@ -1,6 +1,7 @@
 <?php
     use Zend\Session\Container;
     $sessionLogin = new Container('credo');
+    
     $strparam = strlen($unique['customer_id']+1);
     $zeros = substr("000", $strparam);
     $invoiceNoUnq = $zeros . $unique['customer_id']+1;
@@ -16,7 +17,7 @@
         $d = date('Y-m-d', strtotime('-1 years'));
         $financialYear = date('Y', strtotime($d)) . '-' . date('y');
     }
-    $uniqueCode = $financialYear . '/' . date('m').sprintf("%02d", date('d')) .'/' . $uniqueCode;
+    $uniqueCode = $financialYear . '/' . date('m').sprintf("%02d", date('d')) .'/C' . $uniqueCode;
     // \Zend\Debug\Debug::dump();die;
 ?>
 <div class="bg-body-light">

@@ -1,16 +1,35 @@
 <?php
 
 use Zend\Session\Container;
+use Application\Service\CommonService;
 
+$common = new CommonService();
 $sessionLogin = new Container('user');
 $role = $sessionLogin->roleCode;
 
 $acl = $this->layout()->acl;
 if (isset($acl) && $acl->isAllowed($role, 'Admin\Controller\Supplier', 'edit')) {
-    $editAction = ' {"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center",bSortable:false},{"sClass":"center",bSortable:false}';
+    $editAction = ' {"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center text-center",bSortable:false},{"sClass":"center"},{"sClass":"center",bSortable:false}';
 } else {
-    $editAction = ' {"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center",bSortable:false}';
+    $editAction = ' {"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center text-center",bSortable:false},{"sClass":"center"}';
 }
+
+$strparam = strlen($lastId+1);
+$zeros = substr("000", $strparam);
+$invoiceNoUnq = $zeros . $lastId+1;
+$invCodeKey = sprintf("%03d", $invoiceNoUnq);
+if(isset($lastId) && $lastId > 0)
+    $uniqueCode = $invCodeKey;
+else
+    $uniqueCode = '001';
+if (date('m') >= 04) {
+    $d = date('Y-m-d', strtotime('+1 years'));
+    $financialYear = date('Y') . '-' . date('y', strtotime($d));
+} else {
+    $d = date('Y-m-d', strtotime('-1 years'));
+    $financialYear = date('Y', strtotime($d)) . '-' . date('y');
+}
+$uniqueCode = $financialYear . '/' . date('m').sprintf("%02d", date('d')) .'/S' . $uniqueCode;
 ?>
 <style>
 .jcr,.jpr {
@@ -66,7 +85,7 @@ table.dataTable tr th.select-checkbox.selected::after {
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <?php if (isset($acl) && $acl->isAllowed($role, 'Admin\Controller\Supplier', 'add')) {?>
-                        <a href="javascript:void(0);" onclick="showAddForm(this,'add-btn');" class="btn btn-hero-primary pull-right add-btn" style="margin-top:-5px;"><i class="fa fa-plus"></i>&nbsp;Add New Zone</a>
+                        <a href="javascript:void(0);" onclick="showAddForm(this,'add-btn');" class="btn btn-hero-primary pull-right add-btn" style="margin-top:-5px;"><i class="fa fa-plus"></i>&nbsp;Add Supplier</a>
                         <?php }?>
                     </li>
                 </ol>
@@ -81,11 +100,11 @@ table.dataTable tr th.select-checkbox.selected::after {
             <h3 class="block-title">Add Supplier Details</h3>
         </div>
         <div class="block-content">
-            <form name="supplierInformation" id="supplierInformation" class="mb-5" action="<?php echo $this->url('admin-supplier', array('action' => 'add')); ?>" method="post">
+            <form name="supplierInformation" id="supplierInformation" class="mb-5" action="<?php echo $this->url('admin-supplier', array('action' => 'add')); ?>" method="post" enctype="multipart/form-data">
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label" for="scode">Supplier Code<span class="mandatory">*</span></label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control isRequired" id="scode" name="scode" placeholder="Enter the supplier code" title="Please enter the supplier code" onblur="checkNameValidation('supplier', 'supplier_code', this, null, 'Entered supplier code id exist . Please enter an another supplier code.')">
+                        <input type="text" value="<?php echo $uniqueCode;?>" class="form-control isRequired" id="scode" name="scode" placeholder="Enter the supplier code" title="Please enter the supplier code" onblur="checkNameValidation('supplier', 'supplier_code', this, null, 'Entered supplier code id exist . Please enter an another supplier code.')" readonly>
                     </div>
                     <label class="col-sm-2 col-form-label" for="sname">Name<span class="mandatory">*</span></label>
                     <div class="col-sm-4">
@@ -162,7 +181,7 @@ table.dataTable tr th.select-checkbox.selected::after {
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="4" class="dataTables_empty" align="center">Loading data from server</td>
+                        <td colspan="6" class="dataTables_empty" align="center">Loading data from server</td>
                     </tr>
                 </tbody>
             </table>

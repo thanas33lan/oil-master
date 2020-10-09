@@ -37,16 +37,16 @@ class SupplierTable extends AbstractTableGateway {
         if(isset($params['supplierId']) && $params['supplierId'] != ''){
             $data['modified_on'] = $common->getDateTime();
             $data['modified_by'] = $sessionLogin->userId;
-            $this->update($data,array('id' => base64_decode($params['supplierId'])));
+            /* To get supplier id as the last inserted id */
             $lastInsertId = base64_decode($params['supplierId']);
+            $this->update($data,array('id' => $lastInsertId));
         }else{
             $data['created_on'] = $common->getDateTime();
             $data['created_by'] = $sessionLogin->userId;
             $this->insert($data);
             $lastInsertId = $this->lastInsertValue;
         }
-
-        if(isset($_FILES['image']['supplier_name']) && trim($_FILES['image']['supplier_name'])!=''){
+        if(isset($_FILES['image']['name']) && trim($_FILES['image']['name'])!=''){
             if (!file_exists(UPLOAD_PATH . DIRECTORY_SEPARATOR . "supplier") && !is_dir(UPLOAD_PATH . DIRECTORY_SEPARATOR . "supplier")) {
                 mkdir(UPLOAD_PATH . DIRECTORY_SEPARATOR . "supplier",0777);
             }
@@ -54,7 +54,7 @@ class SupplierTable extends AbstractTableGateway {
             if (!file_exists($pathname) && !is_dir($pathname)) {
                 mkdir($pathname,0777);
             }
-            $extension = strtolower(pathinfo(UPLOAD_PATH . DIRECTORY_SEPARATOR . $_FILES['image']['supplier_name'], PATHINFO_EXTENSION));
+            $extension = strtolower(pathinfo(UPLOAD_PATH . DIRECTORY_SEPARATOR . $_FILES['image']['name'], PATHINFO_EXTENSION));
             $imageName = $common->generateRandomString(4,'alphanum'). "." . $extension;
             if(move_uploaded_file($_FILES["image"]["tmp_name"], $pathname. DIRECTORY_SEPARATOR.$imageName)){
                 $this->update(array('supplier_image' => $imageName),array("id" =>$lastInsertId));
@@ -180,13 +180,13 @@ class SupplierTable extends AbstractTableGateway {
 
         foreach ($rResult as $aRow) {
             $row = array();$updateLink = '';$changeStatusLink = '';
-            $pathname = DIRECTORY_SEPARATOR . "supplier" . DIRECTORY_SEPARATOR . "" . $aRow['id'] . DIRECTORY_SEPARATOR . $aRow['supplier_image'];
+            $pathname = DIRECTORY_SEPARATOR . 'uploads'. DIRECTORY_SEPARATOR . "supplier" . DIRECTORY_SEPARATOR . "" . $aRow['id'] . DIRECTORY_SEPARATOR . $aRow['supplier_image'];
 
             $row[] = $aRow['supplier_code'];
             $row[] = ucwords($aRow['supplier_name']);
             $row[] = ucwords($aRow['supplier_type']);
+            $row[] = '<img src="'.$pathname.'" class="img-responsive" title="'.ucwords($aRow['supplier_name']).'" style=" width: 50%; ">';
             $row[] = ucwords($aRow['supplier_status']);
-            $row[] = '<img src="'.$pathname.'" class="img-responsive" title="'.ucwords($aRow['supplier_name']).'"/>';
 
             if($update){
                 $updateLink = '<a href="/admin/supplier/edit/' . base64_encode($aRow['id']) . '" class="btn btn-sm btn-outline-info" style="margin-left: 2px;" title="Edit Supplier of '.ucwords($aRow['supplier_name']).'"><i class="far fa-edit"></i> Edit</a>';
@@ -216,7 +216,8 @@ class SupplierTable extends AbstractTableGateway {
         $sql = new Sql($dbAdapter);
         $sQuery = $sql->select()->from($this->table)->columns(array('id'))->order('id DESC')->limit(1);
         $sQueryStr = $sql->getSqlStringForSqlObject($sQuery);
-        return $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+        $lastId =  $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+        return $lastId['id'];
     }
 }
 ?>
