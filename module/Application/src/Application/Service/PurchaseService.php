@@ -27,7 +27,7 @@ class PurchaseService {
         $adapter = $this->sm->get('Zend\Db\Adapter\Adapter')->getDriver()->getConnection();
         $adapter->beginTransaction();
        try {
-           $purchaseDb = $this->sm->get('PurchaseDetailsTable');
+           $purchaseDb = $this->sm->get('PurchaseTable');
            $purchaseId = $purchaseDb->savePurchaseDetails($params);
            if($purchaseId > 0){
                 $adapter->commit();
@@ -43,28 +43,28 @@ class PurchaseService {
     }
     
     public function getPurchaseListInGrid($parameters) {
-        $purchaseDb = $this->sm->get('PurchaseDetailsTable');
+        $purchaseDb = $this->sm->get('PurchaseTable');
         $acl = $this->sm->get('AppAcl');
         return $purchaseDb->fetchPurchaseListInGrid($parameters, $acl);
     }
     
     public function getAllActivePurchase() {
-        $purchaseDb = $this->sm->get('PurchaseDetailsTable');
+        $purchaseDb = $this->sm->get('PurchaseTable');
         return $purchaseDb->fetchAllActivePurchase();
     }
     
     public function getPurchaseById($id) {
-        $purchaseDb = $this->sm->get('PurchaseDetailsTable');
+        $purchaseDb = $this->sm->get('PurchaseTable');
         return $purchaseDb->fetchPurchaseById($id);
     }
     
     public function deleteById($id) {
-        $purchaseDb = $this->sm->get('PurchaseDetailsTable');
+        $purchaseDb = $this->sm->get('PurchaseTable');
         return $purchaseDb->deleteByPurchaseId($id);
     }
     
     public function changeStatusById($id) {
-        $purchaseDb = $this->sm->get('PurchaseDetailsTable');
+        $purchaseDb = $this->sm->get('PurchaseTable');
         return $purchaseDb->changeStatusByPurchaseId($id);
     }
 }

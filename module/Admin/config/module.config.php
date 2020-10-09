@@ -100,6 +100,16 @@ return array(
                     ),
                 ),
             ),
+            'admin-supplier' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/admin/supplier[/:action][/][:id]',
+                    'defaults' => array(
+                        'controller' => 'Admin\Controller\Supplier',
+                        'action' => 'index',
+                    ),
+                ),
+            ),
             'admin-purchase' => array(
                 'type'    => 'segment',
                 'options' => array(
@@ -142,6 +152,7 @@ return array(
             'Admin\Controller\Zone'         => 'Admin\Controller\ZoneController',
             'Admin\Controller\Product'      => 'Admin\Controller\ProductController',
             'Admin\Controller\QtyDetails'   => 'Admin\Controller\QtyDetailsController',
+            'Admin\Controller\Supplier'     => 'Admin\Controller\SupplierController',
             'Admin\Controller\Purchase'     => 'Admin\Controller\PurchaseController',
         ),
     ),

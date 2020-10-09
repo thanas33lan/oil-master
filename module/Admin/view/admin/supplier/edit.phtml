@@ -1,0 +1,142 @@
+<?php
+    use Zend\Session\Container;
+    $sessionLogin = new Container('credo');
+?>
+<div class="bg-body-light">
+    <div class="content content-full">
+        <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+            <h1 class="flex-sm-fill font-size-h2 font-w400 mt-2 mb-0 mb-sm-2">Zone</h1>
+            <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <a href="<?php echo $this->url('admin-zone', array('action' => 'index')); ?>">
+                        <li class="breadcrumb-item">Zone</li>
+                    </a>
+                    <li class="breadcrumb-item active" aria-current="page">&nbsp;/ Modify</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+
+<div class="content">
+    <div class="content">
+        <div class="block block-rounded block-bordered">
+            <div class="block-header block-header-default">
+                <h3 class="block-title">Modify Zone Details</h3>
+            </div>
+            <div class="block-content">
+                <form name="zoneInformation" id="zoneInformation" class="mb-5" action="<?php echo $this->url('admin-zone', array('action' => 'edit')); ?>" method="post">
+                    <div class="form-group row">
+                        <div class="col-sm-4">
+                            <?php if(isset($result['supplier_image']) && $result['supplier_image'] != ""){ 
+                                $pathname = UPLOAD_PATH.DIRECTORY_SEPARATOR . "supplier" . DIRECTORY_SEPARATOR . "" . $result['id'] . DIRECTORY_SEPARATOR . $result['supplier_image']; 
+                                $url = DIRECTORY_SEPARATOR . "supplier" . DIRECTORY_SEPARATOR . "" . $result['id'] . DIRECTORY_SEPARATOR . $result['supplier_image'];
+                                if(file_exists($pathname)){ ?>
+                                    <img src="<?php echo $url;?>" class="img-responsive" title="<?php echo $result['supplier_name'];?>"/>
+                                <?php } else{ ?>
+                                    <input type="file" class="form-control" id="image" name="image" placeholder="Upload Image" title="Please Upload Image">
+                                <?php }
+                            } else{ ?>
+                                <input type="file" class="form-control" id="image" name="image" placeholder="Upload Image" title="Please Upload Image">
+                            <?php } ?>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label" for="scode">Supplier Code<span class="mandatory">*</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" value="<?php echo $result['supplier_code'];?>" class="form-control isRequired" id="scode" name="scode" placeholder="Enter the supplier code" title="Please enter the supplier code" onblur="checkNameValidation('supplier', 'supplier_code', this, '<?php echo "id##" . $result['id']; ?>', 'Entered supplier code id exist . Please enter an another supplier code.')">
+                        </div>
+                        <label class="col-sm-2 col-form-label" for="sname">Name<span class="mandatory">*</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" value="<?php echo $result['supplier_name'];?>" class="form-control isRequired" id="sname" name="sname" placeholder="Enter the name" title="Please enter the name" onblur="checkNameValidation('supplier', 'supplier_name', this, '<?php echo "id##" . $result['id']; ?>', 'Entered name id exist . Please enter an another name.')">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label" for="stype">Supplier Type</label>
+                        <div class="col-sm-4">
+                            <select class="form-control selectpicker isBootstrapSelect" data-selected-text-format="count > 3" data-live-search="true" data-container="body" data-actions-box="true"  id="stype" name="stype" title="Select the type">
+                                <option value="lubricants" <?php echo (isset($result['supplier_type']) && $result['supplier_type'] == 'lubricants')?"selected='selected'":'';?>>Lubricants</option>
+                                <option value="filters" <?php echo (isset($result['supplier_type']) && $result['supplier_type'] == 'filters')?"selected='selected'":'';?>>Filters</option>
+                                <option value="spares" <?php echo (isset($result['supplier_type']) && $result['supplier_type'] == 'spares')?"selected='selected'":'';?>>Spares</option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 col-form-label" for="smobile">Mobile</label>
+                        <div class="col-sm-4">
+                            <input type="number" value="<?php echo $result['supplier_code'];?>" class="form-control" id="smobile" name="smobile" placeholder="Enter the mobile" title="Please enter the mobile" onblur="checkNameValidation('supplier', 'supplier_mobile', this, '<?php echo "id##" . $result['id']; ?>', 'Entered mobile id exist . Please enter an another mobile.')">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label" for="gstNo">GST Number</label>
+                        <div class="col-sm-4">
+                            <input type="text" value="<?php echo $result['supplier_code'];?>" class="form-control" id="gstNo" name="gstNo" placeholder="Enter the GST number" title="Please enter the GST" onblur="checkNameValidation('supplier', 'supplier_GST_no', this, '<?php echo "id##" . $result['id']; ?>', 'Entered GST id exist . Please enter an another GST.')">
+                        </div>
+                        <label class="col-sm-2 col-form-label" for="saddress">Address</label>
+                        <div class="col-sm-4">
+                            <textarea type="text" class="form-control" id="saddress" name="saddress" placeholder="Enter the address" title="Please enter the address"><?php echo $result['supplier_address'];?></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label" for="status">Status<span class="mandatory">*</span></label>
+                        <div class="col-sm-4">
+                            <select class="form-control isRequired" id="status" name="status" title="Please select the Zone status">
+                                <option value="active" <?php echo (isset($result['status']) && $result['status'] == 'active')?"selected='selected'":'';?>>Active</option>
+                                <option value="inactive" <?php echo (isset($result['status']) && $result['status'] == 'inactive')?"selected='selected'":'';?>>Inactive</option>
+                            </select>
+                        </div>
+                        
+                    </div>
+                    <hr>
+                    <div class="row items-push submit">
+                        <div class="col-lg-7 offset-lg-4">
+                            <input type="hidden" id="supplierId" name="supplierId" value="<?php echo base64_encode($result['id']);?>"/>
+                            <a href="<?php echo $this->url('admin-zone', array('action' => 'index')); ?>" class="btn btn-hero-dark">Cancel</a>&nbsp;
+                            <button type="submit" class="btn btn-hero-primary" onclick="validateNow();return false;"><i class="fa fa-fw fa-check"></i> Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    duplicateName = true;
+    $(document).ready(function(){
+		$("#name").stringToSlug({
+			getPut : "#slug"
+		});
+	});
+    function validateNow() {
+        flag = deforayValidator.init({
+            formId: 'zoneInformation'
+        });
+        if (flag) {
+            if (duplicateName) {
+                $.blockUI();
+                document.getElementById('zoneInformation').submit();
+            }
+        }
+    }
+
+    function checkNameValidation(tableName, fieldName, obj, fnct, msg) {
+        checkValue = document.getElementById(obj.id).value;
+        if ($.trim(checkValue) != '') {
+            $.post("<?php echo $this->url('common', array('action' => 'index')); ?>", {
+                tableName: tableName,
+                fieldName: fieldName,
+                value: checkValue,
+                fnct: fnct
+            },
+            function(data) {
+                if (data > 0) {
+                    alert(msg,'err');
+                    duplicateName = false;
+                    document.getElementById(obj.id).value = "";
+                } else {
+                    duplicateName = true;
+                }
+            });
+        }
+    }
+</script>

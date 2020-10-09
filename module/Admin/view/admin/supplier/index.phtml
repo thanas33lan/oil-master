@@ -1,0 +1,253 @@
+<?php
+
+use Zend\Session\Container;
+
+$sessionLogin = new Container('user');
+$role = $sessionLogin->roleCode;
+
+$acl = $this->layout()->acl;
+if (isset($acl) && $acl->isAllowed($role, 'Admin\Controller\Supplier', 'edit')) {
+    $editAction = ' {"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center",bSortable:false},{"sClass":"center",bSortable:false}';
+} else {
+    $editAction = ' {"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center",bSortable:false}';
+}
+?>
+<style>
+.jcr,.jpr {
+    border-radius: 10px;
+}
+.filter-class {
+    border: 1px solid #e2e0e0;
+    padding: 10px;
+    margin: 10px;
+}
+
+.filter-class-heading {
+    margin-top: -20px;
+    background: white;
+    width: fit-content;
+    padding: 0px 10px;
+    color: gray;
+}
+
+.h3,
+h3 {
+    font-size: 1.0rem;
+}
+
+td.center.inline {
+    /* display: -webkit-inline-box; */
+    text-align: center;
+}
+
+.custom-control.custom-switch {
+    padding-top: 7px;
+}
+thead th:last-child,
+tbody td:last-child {
+    position: sticky;
+    right: 0px;
+    z-index: 1;
+    background: white;
+}
+table.dataTable tr th.select-checkbox.selected::after {
+    content: "✔";
+    margin-top: -11px;
+    margin-left: -4px;
+    text-align: center;
+    text-shadow: rgb(176, 190, 217) 1px 1px, rgb(176, 190, 217) -1px -1px, rgb(176, 190, 217) 1px -1px, rgb(176, 190, 217) -1px 1px;
+}
+</style>
+<div class="bg-body-light">
+    <div class="content content-full">
+        <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+            <h1 class="flex-sm-fill font-size-h2 font-w400 mt-2 mb-0 mb-sm-2">Supplier</h1>
+            <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <?php if (isset($acl) && $acl->isAllowed($role, 'Admin\Controller\Supplier', 'add')) {?>
+                        <a href="javascript:void(0);" onclick="showAddForm(this,'add-btn');" class="btn btn-hero-primary pull-right add-btn" style="margin-top:-5px;"><i class="fa fa-plus"></i>&nbsp;Add New Zone</a>
+                        <?php }?>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="content show-form" style="display: none;">
+    <div class="block block-rounded block-bordered">
+        <div class="block-header block-header-default">
+            <h3 class="block-title">Add Supplier Details</h3>
+        </div>
+        <div class="block-content">
+            <form name="supplierInformation" id="supplierInformation" class="mb-5" action="<?php echo $this->url('admin-supplier', array('action' => 'add')); ?>" method="post">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="scode">Supplier Code<span class="mandatory">*</span></label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control isRequired" id="scode" name="scode" placeholder="Enter the supplier code" title="Please enter the supplier code" onblur="checkNameValidation('supplier', 'supplier_code', this, null, 'Entered supplier code id exist . Please enter an another supplier code.')">
+                    </div>
+                    <label class="col-sm-2 col-form-label" for="sname">Name<span class="mandatory">*</span></label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control isRequired" id="sname" name="sname" placeholder="Enter the name" title="Please enter the name" onblur="checkNameValidation('supplier', 'supplier_name', this, null, 'Entered name id exist . Please enter an another name.')">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="stype">Supplier Type</label>
+                    <div class="col-sm-4">
+                        <select class="form-control selectpicker isBootstrapSelect" data-selected-text-format="count > 3" data-live-search="true" data-container="body" data-actions-box="true"  id="stype" name="stype" title="Select the type">
+                            <option value="lubricants">Lubricants</option>
+                            <option value="filters">Filters</option>
+                            <option value="spares">Spares</option>
+                        </select>
+                    </div>
+                    <label class="col-sm-2 col-form-label" for="smobile">Mobile</label>
+                    <div class="col-sm-4">
+                        <input type="number" class="form-control" id="smobile" name="smobile" placeholder="Enter the mobile" title="Please enter the mobile" onblur="checkNameValidation('supplier', 'supplier_mobile', this, null, 'Entered mobile id exist . Please enter an another mobile.')">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="gstNo">GST Number</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="gstNo" name="gstNo" placeholder="Enter the GST number" title="Please enter the GST" onblur="checkNameValidation('supplier', 'supplier_GST_no', this, null, 'Entered GST id exist . Please enter an another GST.')">
+                    </div>
+                    <label class="col-sm-2 col-form-label" for="saddress">Address</label>
+                    <div class="col-sm-4">
+                        <textarea type="text" class="form-control" id="saddress" name="saddress" placeholder="Enter the address" title="Please enter the address"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="status">Status<span class="mandatory">*</span></label>
+                    <div class="col-sm-4">
+                        <select class="form-control isRequired" id="status" name="status" title="Please select the Zone status">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <label class="col-sm-2 col-form-label" for="image">Image</label>
+                    <div class="col-sm-4">
+                        <input type="file" class="form-control" id="image" name="image" placeholder="Upload Image" title="Please Upload Image">
+                    </div>
+                </div>
+                <hr>
+                <div class="row items-push submit">
+                    <div class="col-lg-7 offset-lg-4">
+                        <a href="javascript:void(0);"  onclick="showAddForm(this,'cancel-btn');" class="btn btn-hero-dark">Cancel</a>&nbsp;
+                        <button type="submit" class="btn btn-hero-primary" onclick="validateNow();return false;"><i class="fa fa-fw fa-check"></i> Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="content">
+    <div class="block block-rounded block-bordered">
+        <div class="block-header block-header-default">
+        </div>
+        <div class="block-content block-content-full table-responsive">
+            <table id="supplierDataTable" class="table table-bordered table-striped table-vcenter">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Image</th>
+                        <th>Status</th>
+                        <?php if (isset($acl) && $acl->isAllowed($role, 'Admin\Controller\Supplier', 'edit')) { ?>
+                        <th>Action</th>
+                        <?php } ?>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="4" class="dataTables_empty" align="center">Loading data from server</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var customerId = [];
+    var allflag = 0;
+    /* Table initialisation */
+    oTable = null;
+    duplicateName = true;
+    function validateNow() {
+        flag = deforayValidator.init({
+            formId: 'supplierInformation'
+        });
+        if (flag) {
+            if (duplicateName) {
+                $.blockUI();
+                document.getElementById('supplierInformation').submit();
+            }
+        }
+    }
+
+    function checkNameValidation(tableName, fieldName, obj, fnct, msg) {
+        checkValue = document.getElementById(obj.id).value;
+        if ($.trim(checkValue) != '') {
+            $.post("<?php echo $this->url('common', array('action' => 'index')); ?>", {
+                tableName: tableName,
+                fieldName: fieldName,
+                value: checkValue,
+                fnct: fnct
+            },
+            function(data) {
+                if (data > 0) {
+                    alert(msg,'err');
+                    duplicateName = false;
+                    document.getElementById(obj.id).value = "";
+                } else {
+                    duplicateName = true;
+                }
+            });
+        }
+    }
+    $(document).ready(function() {
+        
+        oTable = $('#supplierDataTable').dataTable({
+            "bAutoWidth": false,
+            "bProcessing": true,
+            "bServerSide": true,
+            "stateSave": true,
+            "aoColumns": [
+                <?php echo $editAction; ?>
+            ],
+            "sAjaxSource": "<?php echo $this->url('admin-supplier', array('action' => 'index')); ?>",
+            "fnServerData": function(sSource, aoData, fnCallback) {
+                $.ajax({
+                    "dataType": 'json',
+                    "type": "POST",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+                });
+            }
+        });
+    });
+    
+    function changeStatus(catId,status){
+        $.blockUI();
+        $.post("<?php echo $this->url('admin-supplier', array('action' => 'change-status')); ?>", {id: catId, status : status},
+        function(data) {
+            oTable.fnDraw();
+            $.unblockUI();
+        });
+        afterCallback();
+    }
+
+    function showAddForm(obj,btn){
+        if(btn == 'add-btn'){
+            $(obj).hide(500);
+            $('.show-form').show(500);
+        }else{
+            $('.show-form').hide(500);
+            $('.add-btn').show(500);
+        }
+    }
+</script>
