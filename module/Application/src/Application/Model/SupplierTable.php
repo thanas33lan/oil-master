@@ -6,60 +6,78 @@ use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
 use Zend\Db\TableGateway\AbstractTableGateway;
 use Application\Service\CommonService;
+use Zend\Db\Sql\Where;
 
-class QtyDetailsTable extends AbstractTableGateway {
+class SupplierTable extends AbstractTableGateway {
 
-    protected $table = 'qty_details';
+    protected $table = 'supplier';
 
     public function __construct(Adapter $adapter) {
         $this->adapter = $adapter;
     }
-
-    public function saveQtyDetails($params)
+    public function fetchAllState()
     {
-        # save Qty details code...
-        $lastInsertId = 0;
+        return $this->select(array('supplier_status' =>'active'))->toArray();
+    }
+
+    public function saveSupplierDetails($params)
+    {
+        # save Supplier details code...
         $common = new CommonService();
         $sessionLogin = new Container('user');
         $data = array(
-            'qty_name'   => $params['name'],
-            'qty_status' => $params['status']
+            'supplier_code'     => $params['scode'],
+            'supplier_name'     => $params['sname'],
+            'supplier_type'     => $params['stype'],
+            'supplier_mobile'   => $params['smobile'],
+            'supplier_gst_no'   => $params['gstNo'],
+            'supplier_address'  => $params['saddress'],
+            'supplier_status'   => $params['status']
         );
-        if(isset($params['qtyId']) && $params['qtyId'] != ''){
+        if(isset($params['supplierId']) && $params['supplierId'] != ''){
             $data['modified_on'] = $common->getDateTime();
             $data['modified_by'] = $sessionLogin->userId;
-            $lastInsertId = base64_decode($params['qtyId']);
-            $this->update($data,array('qty_id' => $lastInsertId));
+            $this->update($data,array('id' => base64_decode($params['supplierId'])));
+            $lastInsertId = base64_decode($params['supplierId']);
         }else{
             $data['created_on'] = $common->getDateTime();
             $data['created_by'] = $sessionLogin->userId;
             $this->insert($data);
             $lastInsertId = $this->lastInsertValue;
         }
+
+        if(isset($_FILES['image']['supplier_name']) && trim($_FILES['image']['supplier_name'])!=''){
+            if (!file_exists(UPLOAD_PATH . DIRECTORY_SEPARATOR . "supplier") && !is_dir(UPLOAD_PATH . DIRECTORY_SEPARATOR . "supplier")) {
+                mkdir(UPLOAD_PATH . DIRECTORY_SEPARATOR . "supplier",0777);
+            }
+            $pathname = UPLOAD_PATH . DIRECTORY_SEPARATOR . "supplier" . DIRECTORY_SEPARATOR . "" . $lastInsertId;
+            if (!file_exists($pathname) && !is_dir($pathname)) {
+                mkdir($pathname,0777);
+            }
+            $extension = strtolower(pathinfo(UPLOAD_PATH . DIRECTORY_SEPARATOR . $_FILES['image']['supplier_name'], PATHINFO_EXTENSION));
+            $imageName = $common->generateRandomString(4,'alphanum'). "." . $extension;
+            if(move_uploaded_file($_FILES["image"]["tmp_name"], $pathname. DIRECTORY_SEPARATOR.$imageName)){
+                $this->update(array('supplier_image' => $imageName),array("id" =>$lastInsertId));
+            }
+        }
         return $lastInsertId;
     }
 
-    public function fetchAllActiveQty()
+    public function fetchAllActiveSupplier()
     {
-        # fetching active Qty list...
-        $dbAdapter = $this->adapter;
-        $sql = new Sql($dbAdapter);
-        $sQuery = $sql->select()->from(array('qd' => $this->table))
-        ->Where(array('qd.qty_status' => 'active'));
-        $sQueryStr = $sql->getSqlStringForSqlObject($sQuery);
-        return $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+        # fetching active Supplier list...
+        return $this->select(array('supplier_status' => 'active'))->toArray();
     }
 
-    public function changeStatusByQtyId($params)
+    public function changeStatusBysupplierId($params)
     {
-        # change the status of the Qty...
-        return $this->update(array('qty_status' => $params['status']),array('qty_id'=>base64_decode($params['id'])));
+        # change the status of the Supplier...
+        return $this->update(array('supplier_status' => $params['status']),array('id'=>base64_decode($params['id'])));
     }
 
-    public function fetchQtyListInGrid($parameters, $acl)
+    public function fetchSupplierListInGrid($parameters, $acl)
     {
-        $sessionLogin = new Container('user');
-        $aColumns = array('qty_name', 'qty_status', 'created_on', 'user_name');
+        $aColumns = array('supplier_code', 'supplier_name', 'supplier_type', 'supplier_image', 'supplier_status');
         $sLimit = "";
         if (isset($parameters['iDisplayStart']) && $parameters['iDisplayLength'] != '-1') {
             $sOffset = $parameters['iDisplayStart'];
@@ -113,8 +131,7 @@ class QtyDetailsTable extends AbstractTableGateway {
         # Query
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
-        $sQuery = $sql->select()->from(array("q" => $this->table))
-        ->join(array('u' => 'user'),'q.created_by=u.user_id',array('user_name'));
+        $sQuery = $sql->select()->from($this->table);
 
         if (isset($sWhere) && $sWhere != "") {
             $sQuery->where($sWhere);
@@ -130,7 +147,6 @@ class QtyDetailsTable extends AbstractTableGateway {
         }
 
         $sQueryStr = $sql->getSqlStringForSqlObject($sQuery);
-        // die($sQueryStr);
         $rResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
         /* Data set length after filtering */
         $sQuery->reset('limit');
@@ -151,12 +167,12 @@ class QtyDetailsTable extends AbstractTableGateway {
         );
         $sessionLogin = new Container('user');
         $role = $sessionLogin->roleCode;
-        if ($acl->isAllowed($role, 'Admin\Controller\QtyDetails', 'edit')) {
+        if ($acl->isAllowed($role, 'Admin\Controller\Supplier', 'edit')) {
             $update = true;
         } else {
             $update = false;
         }
-        if ($acl->isAllowed($role, 'Admin\Controller\QtyDetails', 'change-status')) {
+        if ($acl->isAllowed($role, 'Admin\Controller\Supplier', 'change-status')) {
             $changeStatus = true;
         } else {
             $changeStatus = false;
@@ -164,30 +180,41 @@ class QtyDetailsTable extends AbstractTableGateway {
 
         foreach ($rResult as $aRow) {
             $row = array();$updateLink = '';$changeStatusLink = '';
-            $row[] = ucwords($aRow['qty_name']);
-            $row[] = ucwords($aRow['qty_status']);
-            $row[] = date('d-M-Y H:i:a',strtotime($aRow['created_on']));
-            $row[] = ucwords($aRow['user_name']);
+            $pathname = DIRECTORY_SEPARATOR . "supplier" . DIRECTORY_SEPARATOR . "" . $aRow['id'] . DIRECTORY_SEPARATOR . $aRow['supplier_image'];
+
+            $row[] = $aRow['supplier_code'];
+            $row[] = ucwords($aRow['supplier_name']);
+            $row[] = ucwords($aRow['supplier_type']);
+            $row[] = ucwords($aRow['supplier_status']);
+            $row[] = '<img src="'.$pathname.'" class="img-responsive" title="'.ucwords($aRow['supplier_name']).'"/>';
+
             if($update){
-                $updateLink = '<a href="/admin/qty/edit/' . base64_encode($aRow['qty_id']) . '" class="btn btn-sm btn-outline-info" style="margin-left: 2px;" title="Edit Qty details of '.ucwords($aRow['qty_name']).'"><i class="far fa-edit"></i> Edit</a>';
+                $updateLink = '<a href="/admin/supplier/edit/' . base64_encode($aRow['id']) . '" class="btn btn-sm btn-outline-info" style="margin-left: 2px;" title="Edit Supplier of '.ucwords($aRow['supplier_name']).'"><i class="far fa-edit"></i> Edit</a>';
             }
             if($changeStatus){
-                $statusTxt = (isset($aRow['qty_status']) && $aRow['qty_status'] == 'active')?"inactive":"active";
-                $changeStatusLink = '<a href="javascript:void(0);" onclick="changeStatus(\''.base64_encode($aRow['qty_id']).'\',\''.$statusTxt.'\')" class="btn btn-sm btn-outline-dark" style="margin-left: 2px;" title="Change status of '.ucwords($aRow['qty_name']).'"><i class="fa fa-exchange-alt"></i> Change Status</a>';
+                $statusTxt = (isset($aRow['supplier_status']) && $aRow['supplier_status'] == 'active')?"inactive":"active";
+                $changeStatusLink = '<a href="javascript:void(0);" onclick="changeStatus(\''.base64_encode($aRow['id']).'\',\''.$statusTxt.'\')" class="btn btn-sm btn-outline-dark" style="margin-left: 2px;" title="Change status of '.ucwords($aRow['supplier_name']).'"><i class="fa fa-exchange-alt"></i> Change Status</a>';
             }
-            $row[] = $updateLink . $changeStatusLink;
+            if($changeStatus || $update){
+                $row[] = $updateLink . $changeStatusLink;
+            }
             $output['aaData'][] = $row;
         }
         return $output;
     }
 
-    public function fetchQtyById($id)
+    public function fetchSupplierById($id)
     {
-        # fetch Qty by id...
+        # fetch Supplier by id...
+        return $this->select(array('id' => $id))->current();
+    }
+
+    public function fetchLastInsertedId()
+    {
+        # code...
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
-        $sQuery = $sql->select()->from($this->table)
-        ->Where(array('qty_id' => $id));
+        $sQuery = $sql->select()->from($this->table)->columns(array('id'))->order('id DESC')->limit(1);
         $sQueryStr = $sql->getSqlStringForSqlObject($sQuery);
         return $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
     }
