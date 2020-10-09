@@ -24,6 +24,9 @@ if (isset($acl) && $acl->isAllowed($role, 'Admin\Controller\Category', 'index'))
 if (isset($acl) && $acl->isAllowed($role, 'Admin\Controller\QtyDetails', 'index')) {
 	$managerMenu .= "<li id='nav-main-item'><a id='admin-qty' class='nav-main-link' href=" . $this->url('admin-qty', array('action' => 'index')) . "><span class='nav-main-link-name'>Qty Details</span></a></li>";
 }
+if (isset($acl) && $acl->isAllowed($role, 'Admin\Controller\Supplier', 'index')) {
+	$managerMenu .= "<li id='nav-main-item'><a id='admin-supplier' class='nav-main-link' href=" . $this->url('admin-supplier', array('action' => 'index')) . "><span class='nav-main-link-name'>Supplier</span></a></li>";
+}
 if (isset($acl) && $acl->isAllowed($role, 'Admin\Controller\Product', 'index')) {
 	$managerMenu .= "<li id='nav-main-item'><a id='admin-product' class='nav-main-link' href=" . $this->url('admin-product', array('action' => 'index')) . "><span class='nav-main-link-name'>Product</span></a></li>";
 }
@@ -353,6 +356,9 @@ if (isset($acl) && $acl->isAllowed($role, 'Admin\Controller\Customer', 'index'))
 			} else if (splitsUrl[2] == "zone") {
 				$("#manage").addClass("open");
 				$("#admin-zone").addClass("active");
+			} else if (splitsUrl[2] == "supplier") {
+				$("#manage").addClass("open");
+				$("#admin-supplier").addClass("active");
 			}
 		}
 		$(".checkNum").keydown(function(e) {

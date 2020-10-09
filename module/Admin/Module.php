@@ -28,6 +28,7 @@ use Application\Service\CategoryService;
 use Application\Service\ZoneService;
 use Application\Service\ProductService;
 use Application\Service\QtyService;
+use Application\Service\SupplierService;
 use Application\Service\PurchaseService;
 
 class Module {
@@ -159,6 +160,9 @@ class Module {
                 },
                 'QtyService' => function($sm) {
                     return new QtyService($sm);
+                },
+                'SupplierService' => function($sm) {
+                    return new SupplierService($sm);
                 },
                 'PurchaseService' => function($sm) {
                     return new PurchaseService($sm);

@@ -5,11 +5,11 @@
 <div class="bg-body-light">
     <div class="content content-full">
         <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-            <h1 class="flex-sm-fill font-size-h2 font-w400 mt-2 mb-0 mb-sm-2">Zone</h1>
+            <h1 class="flex-sm-fill font-size-h2 font-w400 mt-2 mb-0 mb-sm-2">Supplier</h1>
             <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <a href="<?php echo $this->url('admin-zone', array('action' => 'index')); ?>">
-                        <li class="breadcrumb-item">Zone</li>
+                    <a href="<?php echo $this->url('admin-supplier', array('action' => 'index')); ?>">
+                        <li class="breadcrumb-item">Supplier</li>
                     </a>
                     <li class="breadcrumb-item active" aria-current="page">&nbsp;/ Modify</li>
                 </ol>
@@ -23,29 +23,31 @@
     <div class="content">
         <div class="block block-rounded block-bordered">
             <div class="block-header block-header-default">
-                <h3 class="block-title">Modify Zone Details</h3>
+                <h3 class="block-title">Modify Supplier Details</h3>
             </div>
             <div class="block-content">
-                <form name="zoneInformation" id="zoneInformation" class="mb-5" action="<?php echo $this->url('admin-zone', array('action' => 'edit')); ?>" method="post">
+                <form name="supplierInformation" id="supplierInformation" class="mb-5" action="<?php echo $this->url('admin-supplier', array('action' => 'edit')); ?>" method="post" enctype="multipart/form-data">
                     <div class="form-group row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-12 text-center">
                             <?php if(isset($result['supplier_image']) && $result['supplier_image'] != ""){ 
                                 $pathname = UPLOAD_PATH.DIRECTORY_SEPARATOR . "supplier" . DIRECTORY_SEPARATOR . "" . $result['id'] . DIRECTORY_SEPARATOR . $result['supplier_image']; 
-                                $url = DIRECTORY_SEPARATOR . "supplier" . DIRECTORY_SEPARATOR . "" . $result['id'] . DIRECTORY_SEPARATOR . $result['supplier_image'];
+                                $url = DIRECTORY_SEPARATOR . 'uploads'. DIRECTORY_SEPARATOR . "supplier" . DIRECTORY_SEPARATOR . "" . $result['id'] . DIRECTORY_SEPARATOR . $result['supplier_image'];
                                 if(file_exists($pathname)){ ?>
-                                    <img src="<?php echo $url;?>" class="img-responsive" title="<?php echo $result['supplier_name'];?>"/>
+                                    <img src="<?php echo $url;?>" class="img-responsive hide-img" title="<?php echo $result['supplier_name'];?>"/>
+                                    <a href="javascript:void(0);" class="hide-img" onclick="showFile('hide-img','show-file');"><span class="alert alert-danger" style=" padding: 2px; top: -50px; ">X</span></a>
+                                    <input type="file" class="col-sm-4 form-control show-file" id="image" name="image" placeholder="Upload Image" title="Please Upload Image" style="display: none;text-align: center; margin: auto;">
                                 <?php } else{ ?>
-                                    <input type="file" class="form-control" id="image" name="image" placeholder="Upload Image" title="Please Upload Image">
+                                    <input type="file" class="col-sm-4 form-control" id="image" name="image" placeholder="Upload Image" title="Please Upload Image" style=" text-align: center; display: block; margin: auto; ">
                                 <?php }
                             } else{ ?>
-                                <input type="file" class="form-control" id="image" name="image" placeholder="Upload Image" title="Please Upload Image">
+                                <input type="file" class="col-sm-4 form-control" id="image" name="image" placeholder="Upload Image" title="Please Upload Image" style=" text-align: center; display: block; margin: auto; ">
                             <?php } ?>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label" for="scode">Supplier Code<span class="mandatory">*</span></label>
                         <div class="col-sm-4">
-                            <input type="text" value="<?php echo $result['supplier_code'];?>" class="form-control isRequired" id="scode" name="scode" placeholder="Enter the supplier code" title="Please enter the supplier code" onblur="checkNameValidation('supplier', 'supplier_code', this, '<?php echo "id##" . $result['id']; ?>', 'Entered supplier code id exist . Please enter an another supplier code.')">
+                            <input type="text" value="<?php echo $result['supplier_code'];?>" class="form-control isRequired" id="scode" name="scode" placeholder="Enter the supplier code" title="Please enter the supplier code" onblur="checkNameValidation('supplier', 'supplier_code', this, '<?php echo "id##" . $result['id']; ?>', 'Entered supplier code id exist . Please enter an another supplier code.')" readonly>
                         </div>
                         <label class="col-sm-2 col-form-label" for="sname">Name<span class="mandatory">*</span></label>
                         <div class="col-sm-4">
@@ -63,13 +65,13 @@
                         </div>
                         <label class="col-sm-2 col-form-label" for="smobile">Mobile</label>
                         <div class="col-sm-4">
-                            <input type="number" value="<?php echo $result['supplier_code'];?>" class="form-control" id="smobile" name="smobile" placeholder="Enter the mobile" title="Please enter the mobile" onblur="checkNameValidation('supplier', 'supplier_mobile', this, '<?php echo "id##" . $result['id']; ?>', 'Entered mobile id exist . Please enter an another mobile.')">
+                            <input type="number" value="<?php echo $result['supplier_mobile'];?>" class="form-control" id="smobile" name="smobile" placeholder="Enter the mobile" title="Please enter the mobile" onblur="checkNameValidation('supplier', 'supplier_mobile', this, '<?php echo "id##" . $result['id']; ?>', 'Entered mobile id exist . Please enter an another mobile.')">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label" for="gstNo">GST Number</label>
                         <div class="col-sm-4">
-                            <input type="text" value="<?php echo $result['supplier_code'];?>" class="form-control" id="gstNo" name="gstNo" placeholder="Enter the GST number" title="Please enter the GST" onblur="checkNameValidation('supplier', 'supplier_GST_no', this, '<?php echo "id##" . $result['id']; ?>', 'Entered GST id exist . Please enter an another GST.')">
+                            <input type="text" value="<?php echo $result['supplier_gst_no'];?>" class="form-control" id="gstNo" name="gstNo" placeholder="Enter the GST number" title="Please enter the GST" onblur="checkNameValidation('supplier', 'supplier_GST_no', this, '<?php echo "id##" . $result['id']; ?>', 'Entered GST id exist . Please enter an another GST.')">
                         </div>
                         <label class="col-sm-2 col-form-label" for="saddress">Address</label>
                         <div class="col-sm-4">
@@ -91,7 +93,7 @@
                     <div class="row items-push submit">
                         <div class="col-lg-7 offset-lg-4">
                             <input type="hidden" id="supplierId" name="supplierId" value="<?php echo base64_encode($result['id']);?>"/>
-                            <a href="<?php echo $this->url('admin-zone', array('action' => 'index')); ?>" class="btn btn-hero-dark">Cancel</a>&nbsp;
+                            <a href="<?php echo $this->url('admin-supplier', array('action' => 'index')); ?>" class="btn btn-hero-dark">Cancel</a>&nbsp;
                             <button type="submit" class="btn btn-hero-primary" onclick="validateNow();return false;"><i class="fa fa-fw fa-check"></i> Submit</button>
                         </div>
                     </div>
@@ -103,18 +105,16 @@
 <script type="text/javascript">
     duplicateName = true;
     $(document).ready(function(){
-		$("#name").stringToSlug({
-			getPut : "#slug"
-		});
+		
 	});
     function validateNow() {
         flag = deforayValidator.init({
-            formId: 'zoneInformation'
+            formId: 'supplierInformation'
         });
         if (flag) {
             if (duplicateName) {
                 $.blockUI();
-                document.getElementById('zoneInformation').submit();
+                document.getElementById('supplierInformation').submit();
             }
         }
     }
@@ -138,5 +138,9 @@
                 }
             });
         }
+    }
+
+    function showFile(hide, show){
+        $('.'+show+',.'+hide).toggle();
     }
 </script>

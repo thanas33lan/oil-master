@@ -32,6 +32,13 @@ return array (
       'add' => 'allow',
       'edit' => 'allow',
     ),
+    'Admin\\Controller\\Supplier' => 
+    array (
+      'index' => 'allow',
+      'add' => 'allow',
+      'change-status' => 'allow',
+      'edit' => 'allow',
+    ),
     'Admin\\Controller\\User' => 
     array (
       'index' => 'allow',
@@ -50,6 +57,7 @@ return array (
     array (
       'index' => 'allow',
       'add' => 'allow',
+      'change-status' => 'allow',
       'edit' => 'allow',
     ),
   ),
